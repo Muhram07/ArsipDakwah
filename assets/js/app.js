@@ -1,69 +1,97 @@
 let posterData = [];
 
-async function loadPosters(){
+/* =========================
+   LOAD POSTER
+========================= */
 
-    try{
+async function loadPosters() {
+
+    try {
 
         const res = await fetch("data/posters.json");
+
+        if (!res.ok) throw new Error();
 
         posterData = await res.json();
 
         renderPoster(posterData);
 
-    }catch(e){
+        // Kalau categories.js sudah dimuat,
+        // hitung ulang jumlah poster tiap kategori
+        if (typeof updateCategoryCount === "function") {
+            updateCategoryCount();
+        }
 
-        document.getElementById("post-list").innerHTML=
-        "<h3>Gagal memuat data.</h3>";
+    } catch (e) {
+
+        document.getElementById("post-list").innerHTML = `
+        <div class="loading">
+            ❌ Gagal memuat poster.
+        </div>
+        `;
 
     }
 
 }
 
-function renderPoster(data){
+/* =========================
+   RENDER POSTER
+========================= */
 
-    const container=document.getElementById("post-list");
+function renderPoster(data) {
 
-    container.innerHTML="";
+    const container = document.getElementById("post-list");
 
-    if(data.length===0){
+    container.innerHTML = "";
 
-        container.innerHTML="<h3>Tidak ada hasil.</h3>";
+    if (!data || data.length === 0) {
+
+        container.innerHTML = `
+        <div class="loading">
+            Tidak ada hasil.
+        </div>
+        `;
 
         return;
 
     }
 
-    data.forEach(item=>{
+    data.forEach(item => {
 
-        container.innerHTML+=`
+        container.innerHTML += `
 
-        <div class="poster"
-        onclick="bukaPoster('${item.id}')"
-        style="cursor:pointer;">
+        <div class="poster">
 
-            <img src="${item.image}" alt="${item.title}">
+            <img
+            src="${item.image}"
+            alt="${item.title}"
+            onclick="bukaPoster('${item.id}')">
 
-            <h3>${item.title}</h3>
+            <h3 onclick="bukaPoster('${item.id}')">
+                ${item.title}
+            </h3>
 
-            <p>${item.caption}</p>
+            <p>
+                ${item.caption}
+            </p>
 
-            <small>📂 ${item.category}</small>
+            <small>
+                📂 ${item.category}
+            </small>
 
-            <div style="padding:0 20px 20px;">
+            <button
+            onclick="toggleCaption('${item.id}')">
 
-                <button onclick="event.stopPropagation();toggleCaption('${item.id}')">
+                📖 Baca Caption
 
-                    📖 Baca Caption
+            </button>
 
-                </button>
+            <button
+            onclick="copyCaption('${item.id}')">
 
-                <button onclick="event.stopPropagation();copyCaption('${item.id}')">
+                📋 Copy Caption
 
-                    📋 Copy Caption
-
-                </button>
-
-            </div>
+            </button>
 
             <div
             id="caption-${item.id}"
@@ -81,28 +109,40 @@ ${item.content}
 
 }
 
-function bukaPoster(id){
+/* =========================
+   DETAIL POSTER
+========================= */
 
-    location.href="poster.html?id="+id;
+function bukaPoster(id) {
+
+    window.location.href =
+    "poster.html?id=" + encodeURIComponent(id);
 
 }
 
-function toggleCaption(id){
+/* =========================
+   CAPTION
+========================= */
 
-    const box=document.getElementById("caption-"+id);
+function toggleCaption(id) {
 
-    if(box.style.display==="block"){
+    const box =
+    document.getElementById("caption-" + id);
 
-        box.style.display="none";
+    if (!box) return;
 
-    }else{
+    if (box.style.display === "block") {
 
-        box.style.display="block";
+        box.style.display = "none";
+
+    } else {
+
+        box.style.display = "block";
 
         box.scrollIntoView({
 
-            behavior:"smooth",
-            block:"center"
+            behavior: "smooth",
+            block: "center"
 
         });
 
@@ -110,9 +150,12 @@ function toggleCaption(id){
 
 }
 
-function copyCaption(id){
+function copyCaption(id) {
 
-    const poster=posterData.find(p=>p.id===id);
+    const poster =
+    posterData.find(p => p.id === id);
+
+    if (!poster) return;
 
     navigator.clipboard.writeText(poster.content);
 
@@ -120,13 +163,19 @@ function copyCaption(id){
 
 }
 
-const search=document.getElementById("search");
+/* =========================
+   SEARCH
+========================= */
 
-search.addEventListener("input",function(){
+const search =
+document.getElementById("search");
 
-    const key=this.value.trim().toLowerCase();
+search.addEventListener("input", function () {
 
-    if(key===""){
+    const keyword =
+    this.value.trim().toLowerCase();
+
+    if (keyword === "") {
 
         renderPoster(posterData);
 
@@ -134,25 +183,20 @@ search.addEventListener("input",function(){
 
     }
 
-    const hasil=posterData.filter(item=>{
+    const hasil = posterData.filter(item => {
 
-        const tags=(item.tags||[]).join(" ").toLowerCase();
+        const tags =
+        (item.tags || []).join(" ").toLowerCase();
 
-        return(
+        return (
 
-            item.title.toLowerCase().includes(key)
+            item.title.toLowerCase().includes(keyword) ||
 
-            ||
+            item.category.toLowerCase().includes(keyword) ||
 
-            item.category.toLowerCase().includes(key)
+            item.caption.toLowerCase().includes(keyword) ||
 
-            ||
-
-            item.caption.toLowerCase().includes(key)
-
-            ||
-
-            tags.includes(key)
+            tags.includes(keyword)
 
         );
 
@@ -161,5 +205,28 @@ search.addEventListener("input",function(){
     renderPoster(hasil);
 
 });
+
+/* =========================
+   FILTER KATEGORI
+========================= */
+
+function filterCategory(category) {
+
+    const hasil = posterData.filter(item =>
+        item.category === category
+    );
+
+    renderPoster(hasil);
+
+    document.getElementById("post-list")
+    .scrollIntoView({
+
+        behavior: "smooth"
+
+    });
+
+}
+
+/* ========================= */
 
 loadPosters();
