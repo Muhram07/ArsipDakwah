@@ -1,92 +1,51 @@
 let posterData = [];
-let categoryData = [];
 
-const search = document.getElementById("search");
+async function loadPosters() {
 
-const resultBox = document.createElement("div");
-resultBox.id = "search-result";
-search.after(resultBox);
-
-async function loadPosters(){
-
-    try{
+    try {
 
         const res = await fetch("data/posters.json");
+
         posterData = await res.json();
 
         renderPoster(posterData);
 
-    }catch(e){
+    }
 
-        document.getElementById("post-list").innerHTML="<h3>Gagal memuat data.</h3>";
+    catch (e) {
+
+        document.getElementById("post-list").innerHTML =
+        "<h3>Gagal memuat data.</h3>";
 
     }
 
 }
 
-async function loadCategories(){
+function renderPoster(data) {
 
-    try{
+    const container = document.getElementById("post-list");
 
-        const res = await fetch("data/categories.json");
+    container.innerHTML = "";
 
-        categoryData = await res.json();
+    if (data.length === 0) {
 
-        const box = document.getElementById("kategori-list");
-
-        box.innerHTML="";
-
-        categoryData.forEach(cat=>{
-
-            box.innerHTML += `
-
-            <div class="card"
-
-            onclick="filterKategori('${cat.id}')">
-
-            ${cat.icon}
-
-            <br><br>
-
-            ${cat.name}
-
-            </div>
-
-            `;
-
-        });
-
-    }catch(e){
-
-        console.log(e);
-
-    }
-
-}
-
-function renderPoster(data){
-
-    const container=document.getElementById("post-list");
-
-    container.innerHTML="";
-
-    if(data.length===0){
-
-        container.innerHTML="<h3>Tidak ada hasil.</h3>";
+        container.innerHTML = "<h3>Tidak ada hasil.</h3>";
 
         return;
 
     }
 
-    data.forEach(item=>{
+    data.forEach(item => {
 
-        container.innerHTML+=`
+        container.innerHTML += `
 
-        <div class="poster"
+        <div class="poster">
 
-        id="${item.id}">
+            <a href="poster.html?id=${item.id}">
 
-            <img src="${item.image}">
+                <img src="${item.image}" alt="${item.title}">
+
+            </a>
 
             <h3>${item.title}</h3>
 
@@ -94,27 +53,17 @@ function renderPoster(data){
 
             <small>${item.category}</small>
 
-            <button onclick="toggleCaption('${item.id}')">
+            <button onclick="window.location.href='poster.html?id=${item.id}'">
 
-            📖 Baca Caption
+                📖 Baca Caption
 
             </button>
 
             <button onclick="copyCaption('${item.id}')">
 
-            📋 Copy Caption
+                📋 Copy Caption
 
             </button>
-
-            <div
-
-            id="caption-${item.id}"
-
-            class="caption-box">
-
-${item.content}
-
-            </div>
 
         </div>
 
@@ -124,33 +73,9 @@ ${item.content}
 
 }
 
-function toggleCaption(id){
+function copyCaption(id) {
 
-    const box=document.getElementById("caption-"+id);
-
-    if(box.style.display==="block"){
-
-        box.style.display="none";
-
-    }else{
-
-        box.style.display="block";
-
-        box.scrollIntoView({
-
-            behavior:"smooth",
-
-            block:"center"
-
-        });
-
-    }
-
-}
-
-function copyCaption(id){
-
-    const poster=posterData.find(p=>p.id===id);
+    const poster = posterData.find(item => item.id === id);
 
     navigator.clipboard.writeText(poster.content);
 
@@ -158,33 +83,21 @@ function copyCaption(id){
 
 }
 
-function filterKategori(id){
+const search = document.getElementById("search");
 
-    resultBox.innerHTML="";
+const resultBox = document.createElement("div");
 
-    search.value="";
+resultBox.id = "search-result";
 
-    const hasil=posterData.filter(p=>p.category===id);
+search.after(resultBox);
 
-    renderPoster(hasil);
+search.addEventListener("input", function () {
 
-    document.getElementById("post-list")
+    const key = this.value.trim().toLowerCase();
 
-    .scrollIntoView({
+    if (key === "") {
 
-        behavior:"smooth"
-
-    });
-
-}
-
-search.addEventListener("input",function(){
-
-    const key=this.value.trim().toLowerCase();
-
-    if(key===""){
-
-        resultBox.innerHTML="";
+        resultBox.innerHTML = "";
 
         renderPoster(posterData);
 
@@ -192,41 +105,29 @@ search.addEventListener("input",function(){
 
     }
 
-    const hasil=posterData.filter(item=>
+    const hasil = posterData.filter(item =>
 
-        item.title.toLowerCase().includes(key)||
+        item.title.toLowerCase().includes(key) ||
 
-        item.category.toLowerCase().includes(key)||
+        item.category.toLowerCase().includes(key) ||
 
-        item.caption.toLowerCase().includes(key)||
-
-        item.tags.join(" ").toLowerCase().includes(key)
+        item.caption.toLowerCase().includes(key)
 
     );
 
-    resultBox.innerHTML="";
+    resultBox.innerHTML = "";
 
-    if(hasil.length===0){
+    hasil.forEach(item => {
 
-        resultBox.innerHTML="<div class='search-item'>Tidak ada hasil.</div>";
+        resultBox.innerHTML += `
 
-        return;
+        <div class="search-item"
 
-    }
+        onclick="window.location.href='poster.html?id=${item.id}'">
 
-    hasil.forEach(item=>{
+            <b>📚 ${item.title}</b>
 
-        resultBox.innerHTML+=`
-
-        <div
-
-        class="search-item"
-
-        onclick="goPoster('${item.id}')">
-
-        <b>${item.title}</b>
-
-        <small>${item.category}</small>
+            <small>${item.category}</small>
 
         </div>
 
@@ -235,31 +136,5 @@ search.addEventListener("input",function(){
     });
 
 });
-
-function goPoster(id){
-
-    resultBox.innerHTML="";
-
-    search.value="";
-
-    renderPoster(posterData);
-
-    setTimeout(()=>{
-
-        document.getElementById(id)
-
-        .scrollIntoView({
-
-            behavior:"smooth",
-
-            block:"start"
-
-        });
-
-    },150);
-
-}
-
-loadCategories();
 
 loadPosters();
