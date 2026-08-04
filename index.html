@@ -1,100 +1,40 @@
 <!DOCTYPE html>
 <html lang="id">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <title>Arsip Dakwah Manhaj Salaf</title>
 
-<style>
+<meta name="description" content="Kumpulan Poster Dakwah Manhaj Salaf Berdasarkan Bab Ilmu">
 
-body{
-background:#0b0b0b;
-color:white;
-font-family:Arial,sans-serif;
-margin:0;
-padding:0;
-}
-
-header{
-background:#111827;
-padding:30px;
-text-align:center;
-}
-
-h1{
-color:#FFD700;
-margin:0;
-}
-
-p{
-color:#cccccc;
-}
-
-.search{
-padding:20px;
-text-align:center;
-}
-
-input{
-width:80%;
-max-width:600px;
-padding:15px;
-border-radius:10px;
-border:none;
-font-size:16px;
-}
-
-.menu{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(180px,1fr));
-gap:15px;
-padding:20px;
-}
-
-.card{
-background:#1c1c1c;
-padding:20px;
-border-radius:12px;
-text-align:center;
-font-size:20px;
-transition:.3s;
-cursor:pointer;
-}
-
-.card:hover{
-background:#2d2d2d;
-}
-
-footer{
-text-align:center;
-padding:25px;
-color:#888;
-}
-
-</style>
+<link rel="stylesheet" href="assets/style.css">
 
 </head>
 
 <body>
 
-<header>
+<header class="hero">
+
+<div class="overlay">
 
 <h1>📚 Arsip Dakwah Manhaj Salaf</h1>
 
-<p>Kumpulan Poster Dakwah Berdasarkan Bab Ilmu</p>
-
-</header>
-
-<div class="search">
+<p>
+Kumpulan Poster Dakwah Berdasarkan Bab Ilmu
+</p>
 
 <input
+id="search"
 type="text"
-placeholder="🔍 Cari Materi...">
+placeholder="🔍 Cari materi...">
 
 </div>
 
-<div class="menu">
+</header>
+
+<section class="kategori">
 
 <div class="card">📚 Tauhid</div>
 
@@ -120,13 +60,71 @@ placeholder="🔍 Cari Materi...">
 
 <div class="card">❓ Tanya Jawab</div>
 
+</section>
+
+<section class="terbaru">
+
+<h2>🆕 Poster Terbaru</h2>
+
+<div id="post-list">
+
+<div class="loading">
+Memuat data...
 </div>
+
+</div>
+
+</section>
 
 <footer>
 
+<div>
+
+<b>Arsip Dakwah Manhaj Salaf</b>
+
+</div>
+
+<div>
+
+Website arsip poster dakwah berdasarkan bab ilmu.
+
+</div>
+
+<div class="akun">
+
+<a href="https://instagram.com/tauhidsunnah_id" target="_blank">
+
+@TauhidSunnah_id
+
+</a>
+
+|
+
+<a href="https://instagram.com/an.nashiha_daily" target="_blank">
+
+@an.nashiha_daily
+
+</a>
+
+|
+
+<a href="https://instagram.com/studi_islam._" target="_blank">
+
+@studi_islam._
+
+</a>
+
+</div>
+
+<p>
+
 © 2026 Arsip Dakwah Manhaj Salaf
+
+</p>
 
 </footer>
 
+<script src="assets/app.js"></script>
+
 </body>
-</html>
+  </html>
