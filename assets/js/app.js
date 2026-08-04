@@ -1,51 +1,44 @@
 let posterData = [];
 
-async function loadPosters() {
+async function loadPosters(){
 
-    try {
+    try{
 
         const res = await fetch("data/posters.json");
-
         posterData = await res.json();
 
         renderPoster(posterData);
 
-    }
+    }catch(e){
 
-    catch (e) {
-
-        document.getElementById("post-list").innerHTML =
+        document.getElementById("post-list").innerHTML=
         "<h3>Gagal memuat data.</h3>";
 
     }
 
 }
 
-function renderPoster(data) {
+function renderPoster(data){
 
-    const container = document.getElementById("post-list");
+    const container=document.getElementById("post-list");
 
-    container.innerHTML = "";
+    container.innerHTML="";
 
-    if (data.length === 0) {
+    if(data.length===0){
 
-        container.innerHTML = "<h3>Tidak ada hasil.</h3>";
+        container.innerHTML="<h3>Tidak ada hasil.</h3>";
 
         return;
 
     }
 
-    data.forEach(item => {
+    data.forEach((item,index)=>{
 
-        container.innerHTML += `
+        container.innerHTML+=`
 
         <div class="poster">
 
-            <a href="poster.html?id=${item.id}">
-
-                <img src="${item.image}" alt="${item.title}">
-
-            </a>
+            <img src="${item.image}" alt="${item.title}">
 
             <h3>${item.title}</h3>
 
@@ -53,17 +46,25 @@ function renderPoster(data) {
 
             <small>${item.category}</small>
 
-            <button onclick="window.location.href='poster.html?id=${item.id}'">
+            <button onclick="toggleCaption(${index})">
 
                 📖 Baca Caption
 
             </button>
 
-            <button onclick="copyCaption('${item.id}')">
+            <button onclick="copyCaption(${index})">
 
                 📋 Copy Caption
 
             </button>
+
+            <div
+            id="caption-${index}"
+            class="caption-box">
+
+${item.content}
+
+            </div>
 
         </div>
 
@@ -73,31 +74,40 @@ function renderPoster(data) {
 
 }
 
-function copyCaption(id) {
+function toggleCaption(id){
 
-    const poster = posterData.find(item => item.id === id);
+    const box=document.getElementById("caption-"+id);
 
-    navigator.clipboard.writeText(poster.content);
+    box.style.display=
+    box.style.display==="block"
+    ? "none"
+    : "block";
+
+}
+
+function copyCaption(id){
+
+    navigator.clipboard.writeText(
+        posterData[id].content
+    );
 
     alert("✅ Caption berhasil disalin");
 
 }
 
-const search = document.getElementById("search");
+/* =======================
+      SEARCH
+======================= */
 
-const resultBox = document.createElement("div");
+const search=document.getElementById("search");
 
-resultBox.id = "search-result";
+search.addEventListener("input",function(){
 
-search.after(resultBox);
+    const key=this.value
+    .trim()
+    .toLowerCase();
 
-search.addEventListener("input", function () {
-
-    const key = this.value.trim().toLowerCase();
-
-    if (key === "") {
-
-        resultBox.innerHTML = "";
+    if(key===""){
 
         renderPoster(posterData);
 
@@ -105,35 +115,33 @@ search.addEventListener("input", function () {
 
     }
 
-    const hasil = posterData.filter(item =>
+    const hasil=posterData.filter(item=>{
 
-        item.title.toLowerCase().includes(key) ||
+        const tagText=(item.tags||[])
+        .join(" ")
+        .toLowerCase();
 
-        item.category.toLowerCase().includes(key) ||
+        return(
 
-        item.caption.toLowerCase().includes(key)
+            item.title.toLowerCase().includes(key)
 
-    );
+            ||
 
-    resultBox.innerHTML = "";
+            item.category.toLowerCase().includes(key)
 
-    hasil.forEach(item => {
+            ||
 
-        resultBox.innerHTML += `
+            item.caption.toLowerCase().includes(key)
 
-        <div class="search-item"
+            ||
 
-        onclick="window.location.href='poster.html?id=${item.id}'">
+            tagText.includes(key)
 
-            <b>📚 ${item.title}</b>
-
-            <small>${item.category}</small>
-
-        </div>
-
-        `;
+        );
 
     });
+
+    renderPoster(hasil);
 
 });
 
