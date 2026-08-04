@@ -10,6 +10,11 @@ background:#0b0b0b;
 color:#fff;
 }
 
+a{
+text-decoration:none;
+color:#FFD700;
+}
+
 .hero{
 background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
 padding:60px 20px;
@@ -47,112 +52,62 @@ padding:35px;
 
 .card{
 background:#1a1a1a;
-border-radius:16px;
 padding:22px;
-font-size:22px;
+border-radius:14px;
 text-align:center;
+font-size:22px;
+font-weight:bold;
+transition:.3s;
 cursor:pointer;
-transition:.25s;
-border:1px solid #2b2b2b;
+border:1px solid #222;
 }
 
 .card:hover{
-background:#252525;
+background:#222;
 transform:translateY(-4px);
 border-color:#FFD700;
 }
 
 .terbaru{
-padding:35px;
+padding:30px;
 }
 
 .terbaru h2{
-margin-bottom:20px;
 color:#FFD700;
+margin-bottom:25px;
+font-size:32px;
 }
 
-.loading{
-background:#1a1a1a;
-padding:30px;
-border-radius:14px;
-text-align:center;
-color:#999;
-}
-
-footer{
-margin-top:60px;
-padding:40px 20px;
-background:#111827;
-text-align:center;
-}
-
-footer b{
-font-size:22px;
-color:#FFD700;
-}
-
-footer div{
-margin:12px 0;
-}
-
-footer a{
-color:#60a5fa;
-text-decoration:none;
-}
-
-footer a:hover{
-text-decoration:underline;
-}
-
-@media(max-width:768px){
-
-.hero h1{
-font-size:30px;
-}
-
-.hero p{
-font-size:16px;
-}
-
-.kategori{
-padding:20px;
-grid-template-columns:1fr;
-}
-
-.card{
-font-size:20px;
-}
-
-}
 .poster{
-background:#181818;
-padding:20px;
-border-radius:16px;
-margin:25px 0;
+background:#151515;
+border-radius:18px;
+overflow:hidden;
+margin-bottom:35px;
+border:1px solid #222;
+box-shadow:0 0 20px rgba(0,0,0,.35);
 }
 
 .poster img{
 width:100%;
-border-radius:14px;
 display:block;
-margin-bottom:15px;
 }
 
 .poster h3{
-font-size:28px;
-margin:10px 0;
+padding:20px 20px 10px;
+font-size:30px;
 }
 
 .poster p{
+padding:0 20px;
 font-size:18px;
-line-height:1.6;
+line-height:1.7;
 }
 
 .poster small{
 display:block;
-margin:10px 0 20px;
-color:#aaa;
+padding:15px 20px;
 font-size:15px;
+color:#aaa;
 }
 
 .poster button{
@@ -160,24 +115,13 @@ background:#FFD700;
 color:#111;
 border:none;
 padding:12px 18px;
-margin:6px;
+margin:0 0 20px 20px;
 border-radius:10px;
 font-size:16px;
 font-weight:bold;
 cursor:pointer;
+transition:.3s;
 }
 
 .poster button:hover{
-background:#ffea70;
-}
-
-.caption-box{
-margin-top:20px;
-padding:18px;
-background:#101010;
-border-left:4px solid #FFD700;
-border-radius:10px;
-white-space:pre-wrap;
-line-height:1.8;
-font-size:17px;
-}
+background:#ffe55c
