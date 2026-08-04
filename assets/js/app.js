@@ -1,105 +1,74 @@
-let posterData = [];
-
-/* =========================
-   LOAD POSTER
-========================= */
+let posterData=[];
 
 async function loadPosters(){
 
-    try{
+try{
 
-        const res = await fetch("data/posters.json");
+const res=await fetch("data/posters.json");
 
-        if(!res.ok) throw new Error();
+if(!res.ok) throw new Error();
 
-        posterData = await res.json();
+posterData=await res.json();
 
-        renderPoster(posterData);
+renderPoster(posterData);
 
-        if(typeof updateCategoryCount==="function"){
+if(typeof updateCategoryCount==="function"){
+updateCategoryCount();
+}
 
-            updateCategoryCount();
+}catch(e){
 
-        }
-
-    }catch(e){
-
-        document.getElementById("post-list").innerHTML=`
-
-        <div class="loading">
-
-        ❌ Gagal memuat poster.
-
-        </div>
-
-        `;
-
-    }
+document.getElementById("post-list").innerHTML=`
+<div class="loading">
+❌ Gagal memuat poster.
+</div>
+`;
 
 }
 
-/* =========================
-   RENDER POSTER
-========================= */
+}
 
 function renderPoster(data){
 
-    const container=document.getElementById("post-list");
+const container=document.getElementById("post-list");
 
-    container.innerHTML="";
+container.innerHTML="";
 
-    if(!data || data.length===0){
+if(!data||data.length===0){
 
-        container.innerHTML=`
+container.innerHTML=`
+<div class="loading">
+Tidak ada hasil.
+</div>
+`;
 
-        <div class="loading">
+return;
 
-        Tidak ada hasil.
+}
 
-        </div>
+data.forEach(item=>{
 
-        `;
-
-        return;
-
-    }
-
-    data.forEach(item=>{
-
-        container.innerHTML+=`
+container.innerHTML+=`
 
 <div class="poster">
 
 <img
-
 src="${item.image}"
-
 alt="${item.title}"
-
 onclick="bukaPoster('${item.id}')">
 
 <h3
-
 onclick="bukaPoster('${item.id}')">
 
 ${item.title}
 
 </h3>
 
-<p>
+<p>${item.caption}</p>
 
-${item.caption}
-
-</p>
-
-<small>
-
-📂 ${item.category}
-
-</small>
+<small>📂 ${item.category}</small>
 
 <button
-
 onclick="event.stopPropagation();toggleCaption('${item.id}')">
 
 📖 Baca Caption
@@ -107,7 +76,6 @@ onclick="event.stopPropagation();toggleCaption('${item.id}')">
 </button>
 
 <button
-
 onclick="event.stopPropagation();copyCaption('${item.id}')">
 
 📋 Copy Caption
@@ -115,9 +83,7 @@ onclick="event.stopPropagation();copyCaption('${item.id}')">
 </button>
 
 <div
-
 id="caption-${item.id}"
-
 class="caption-box">
 
 ${item.content}
@@ -128,171 +94,88 @@ ${item.content}
 
 `;
 
-    });
+});
 
 }
-
-/* =========================
-   DETAIL
-========================= */
 
 function bukaPoster(id){
 
-    window.location.href=
-
-    "poster.html?id="+
-
-    encodeURIComponent(id);
+location.href=
+"poster.html?id="+encodeURIComponent(id);
 
 }
 
-/* =========================
-   CAPTION
-========================= */
-
 function toggleCaption(id){
 
-    const box=
+const box=document.getElementById("caption-"+id);
 
-    document.getElementById(
+if(!box)return;
 
-    "caption-"+id
+if(box.style.display==="block"){
 
-    );
+box.style.display="none";
 
-    if(!box) return;
+}else{
 
-    if(box.style.display==="block"){
+box.style.display="block";
 
-        box.style.display="none";
+box.scrollIntoView({
 
-    }else{
+behavior:"smooth",
 
-        box.style.display="block";
+block:"center"
 
-        box.scrollIntoView({
+});
 
-            behavior:"smooth",
-
-            block:"center"
-
-        });
-
-    }
+}
 
 }
 
 function copyCaption(id){
 
-    const poster=
+const poster=posterData.find(p=>p.id===id);
 
-    posterData.find(
+if(!poster)return;
 
-    p=>p.id===id
+navigator.clipboard.writeText(poster.content);
 
-    );
-
-    if(!poster) return;
-
-    navigator.clipboard.writeText(
-
-    poster.content
-
-    );
-
-    alert(
-
-    "✅ Caption berhasil disalin"
-
-    );
+alert("✅ Caption berhasil disalin");
 
 }
 
-/* =========================
-   LIVE SEARCH
-========================= */
+const search=document.getElementById("search");
 
-const search=
-
-document.getElementById(
-
-"search"
-
-);
-
-const resultBox=
-
-document.createElement("div");
+const resultBox=document.createElement("div");
 
 resultBox.id="search-result";
 
 search.after(resultBox);
 
-search.addEventListener(
+search.addEventListener("input",function(){
 
-"input",
-
-function(){
-
-const key=
-
-this.value
-
-.trim()
-
-.toLowerCase();
+const key=this.value.trim().toLowerCase();
 
 if(key===""){
 
 resultBox.innerHTML="";
 
-renderPoster(
-
-posterData
-
-);
+renderPoster(posterData);
 
 return;
 
 }
 
-const hasil=
+const hasil=posterData.filter(item=>{
 
-posterData.filter(item=>{
-
-const tags=
-
-(item.tags||[])
-
-.join(" ")
-
-.toLowerCase();
+const tags=(item.tags||[]).join(" ").toLowerCase();
 
 return(
 
-item.title
+item.title.toLowerCase().includes(key)||
 
-.toLowerCase()
+item.category.toLowerCase().includes(key)||
 
-.includes(key)
-
-||
-
-item.category
-
-.toLowerCase()
-
-.includes(key)
-
-||
-
-item.caption
-
-.toLowerCase()
-
-.includes(key)
-
-||
+item.caption.toLowerCase().includes(key)||
 
 tags.includes(key)
 
@@ -300,7 +183,7 @@ tags.includes(key)
 
 });
 
-   renderPoster(hasil);
+renderPoster(hasil);
 
 resultBox.innerHTML="";
 
@@ -325,24 +208,12 @@ hasil.forEach(item=>{
 resultBox.innerHTML+=`
 
 <div
-
 class="search-item"
-
 onclick="pilihPoster('${item.id}')">
 
-<b>
+<b>📚 ${item.title}</b>
 
-📚 ${item.title}
-
-</b>
-
-<br>
-
-<small>
-
-📂 ${item.category}
-
-</small>
+<small>📂 ${item.category}</small>
 
 </div>
 
@@ -350,11 +221,7 @@ onclick="pilihPoster('${item.id}')">
 
 });
 
-}
-
-/* =========================
-   PILIH HASIL PENCARIAN
-========================= */
+});
 
 function pilihPoster(id){
 
@@ -362,22 +229,14 @@ resultBox.innerHTML="";
 
 search.value="";
 
-const hasil=
-
-posterData.filter(
-
-item=>item.id===id
-
-);
+const hasil=posterData.filter(item=>item.id===id);
 
 renderPoster(hasil);
 
 setTimeout(()=>{
 
 document
-
 .getElementById("post-list")
-
 .scrollIntoView({
 
 behavior:"smooth"
@@ -388,30 +247,18 @@ behavior:"smooth"
 
 }
 
-/* =========================
-   FILTER KATEGORI
-========================= */
-
 function filterCategory(category){
 
 resultBox.innerHTML="";
 
 search.value="";
 
-const hasil=
-
-posterData.filter(
-
-item=>item.category===category
-
-);
+const hasil=posterData.filter(item=>item.category===category);
 
 renderPoster(hasil);
 
 document
-
 .getElementById("post-list")
-
 .scrollIntoView({
 
 behavior:"smooth"
@@ -419,7 +266,5 @@ behavior:"smooth"
 });
 
 }
-
-/* ========================= */
 
 loadPosters();
