@@ -1,62 +1,71 @@
 const params = new URLSearchParams(window.location.search);
-
 const id = params.get("id");
 
-async function loadPoster(){
+async function loadPoster() {
 
-    try{
+    try {
 
         const res = await fetch("data/posters.json");
 
+        if (!res.ok) {
+            throw new Error("Gagal mengambil posters.json");
+        }
+
         const posters = await res.json();
 
-        const poster = posters.find(item=>item.id===id);
+        // Kalau URL tidak punya ?id=...
+        if (!id) {
+            location.href = "/";
+            return;
+        }
 
-        if(!poster){
+        const poster = posters.find(item => item.id === id);
 
-            document.body.innerHTML=`
+        if (!poster) {
 
+            document.body.innerHTML = `
             <div style="
-                text-align:center;
-                margin-top:100px;
                 color:white;
-                font-size:30px;
+                text-align:center;
+                padding:80px 20px;
+                font-family:Arial;
             ">
+                <h1>❌ Poster tidak ditemukan</h1>
 
-            ❌ Poster tidak ditemukan
+                <p>ID Poster : ${id}</p>
+
+                <br>
+
+                <a href="/"
+                style="
+                    color:#FFD700;
+                    font-size:20px;
+                    text-decoration:none;
+                ">
+                    ⬅ Kembali ke Beranda
+                </a>
 
             </div>
-
             `;
 
             return;
 
         }
 
-        document.title=poster.title;
+        document.title = poster.title + " | Arsip Dakwah";
 
-        document.getElementById("judul").textContent=
-        poster.title;
+        document.getElementById("judul").textContent = poster.title;
+        document.getElementById("judul2").textContent = poster.title;
+        document.getElementById("kategori").textContent = "📂 " + poster.category;
 
-        document.getElementById("judul2").textContent=
-        poster.title;
+        document.getElementById("gambar").src = poster.image;
+        document.getElementById("gambar").alt = poster.title;
 
-        document.getElementById("kategori").textContent=
-        "📚 "+poster.category;
+        document.getElementById("caption").textContent = poster.caption;
 
-        document.getElementById("gambar").src=
-        poster.image;
+        document.getElementById("isi").textContent = poster.content;
 
-        document.getElementById("gambar").alt=
-        poster.title;
-
-        document.getElementById("caption").textContent=
-        poster.caption;
-
-        document.getElementById("isi").textContent=
-        poster.content;
-
-        document.getElementById("copy").onclick=function(){
+        document.getElementById("copy").onclick = function () {
 
             navigator.clipboard.writeText(poster.content);
 
@@ -64,21 +73,33 @@ async function loadPoster(){
 
         };
 
-    }catch(e){
+    } catch (err) {
 
-        document.body.innerHTML=`
+        console.error(err);
 
+        document.body.innerHTML = `
         <div style="
-            text-align:center;
-            margin-top:100px;
             color:white;
-            font-size:30px;
+            text-align:center;
+            padding:80px 20px;
+            font-family:Arial;
         ">
+            <h1>❌ Gagal memuat poster</h1>
 
-        ❌ Gagal memuat poster
+            <p>Periksa data/posters.json atau koneksi.</p>
+
+            <br>
+
+            <a href="/"
+            style="
+                color:#FFD700;
+                font-size:20px;
+                text-decoration:none;
+            ">
+                ⬅ Kembali ke Beranda
+            </a>
 
         </div>
-
         `;
 
     }
