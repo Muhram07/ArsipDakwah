@@ -1,103 +1,104 @@
 let posterData = [];
 
-async function loadPosters() {
+async function loadPosters(){
 
-  try {
+    try{
 
-    const res = await fetch("data/posters.json");
+        const res = await fetch("data/posters.json");
+        posterData = await res.json();
 
-    posterData = await res.json();
+        renderPoster(posterData);
 
-    renderPoster(posterData);
+    }catch(e){
 
-  } catch (e) {
+        document.getElementById("post-list").innerHTML="<h3>Gagal memuat data.</h3>";
 
-    document.getElementById("post-list").innerHTML =
-      "<h3>Gagal memuat data.</h3>";
-
-  }
+    }
 
 }
 
 function renderPoster(data){
 
-  const container=document.getElementById("post-list");
+    const container=document.getElementById("post-list");
 
-  container.innerHTML="";
+    container.innerHTML="";
 
-  if(data.length===0){
+    if(data.length===0){
 
-    container.innerHTML="<h3>Tidak ada hasil.</h3>";
+        container.innerHTML="<h3>Tidak ada hasil.</h3>";
+        return;
 
-    return;
+    }
 
-  }
+    data.forEach((item,index)=>{
 
-  data.forEach((item,index)=>{
+        container.innerHTML+=`
 
-    const originalIndex=posterData.indexOf(item);
+        <div class="poster" id="poster-${index}">
 
-    container.innerHTML+=`
+            <img src="${item.image}" alt="${item.title}">
 
-    <div class="poster"
-    id="poster-${originalIndex}">
+            <h3>${item.title}</h3>
 
-      <img src="${item.image}" alt="${item.title}">
+            <p>${item.caption}</p>
 
-      <h3>${item.title}</h3>
+            <small>${item.category}</small>
 
-      <p>${item.caption}</p>
+            <button onclick="toggleCaption(${index})">
+            📖 Baca Caption
+            </button>
 
-      <small>${item.category}</small>
+            <button onclick="copyCaption(${index})">
+            📋 Copy Caption
+            </button>
 
-      <button onclick="toggleCaption(${originalIndex})">
+            <div
+            id="caption-${index}"
+            class="caption-box">
 
-      📖 Baca Caption
+${item.content}
 
-      </button>
+            </div>
 
-      <button onclick="copyCaption(${originalIndex})">
+        </div>
 
-      📋 Copy Caption
+        `;
 
-      </button>
-
-      <div
-      id="caption-${originalIndex}"
-      class="caption-box">
-
-      ${item.content}
-
-      </div>
-
-    </div>
-
-    `;
-
-  });
+    });
 
 }
 
 function toggleCaption(id){
 
-  const box=document.getElementById("caption-"+id);
+    const box=document.getElementById("caption-"+id);
 
-  box.style.display=
-  box.style.display==="block" ? "none":"block";
+    if(box.style.display==="block"){
+
+        box.style.display="none";
+
+    }else{
+
+        box.style.display="block";
+
+        box.scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"center"
+
+        });
+
+    }
 
 }
 
 function copyCaption(id){
 
-  navigator.clipboard.writeText(posterData[id].content);
+    navigator.clipboard.writeText(posterData[id].content);
 
-  alert("✅ Caption berhasil disalin");
+    alert("✅ Caption berhasil disalin");
 
 }
-
-/* ===========================
-   LIVE SEARCH
-=========================== */
 
 const search=document.getElementById("search");
 
@@ -109,97 +110,74 @@ search.after(resultBox);
 
 search.addEventListener("input",function(){
 
-  const key=this.value.trim().toLowerCase();
+    const key=this.value.trim().toLowerCase();
 
-  if(key===""){
+    if(key===""){
 
-    resultBox.innerHTML="";
-
-    renderPoster(posterData);
-
-    return;
-
-  }
-
-  const hasil=posterData.filter(item=>
-
-    item.title.toLowerCase().includes(key)||
-
-    item.category.toLowerCase().includes(key)||
-
-    item.caption.toLowerCase().includes(key)
-
-  );
-
-  resultBox.innerHTML="";
-
-  if(hasil.length===0){
-
-    resultBox.innerHTML=`
-
-    <div class="search-item">
-
-    Tidak ada hasil.
-
-    </div>
-
-    `;
-
-    renderPoster([]);
-
-    return;
-
-  }
-
-  hasil.forEach(item=>{
-
-    const originalIndex=posterData.indexOf(item);
-
-    resultBox.innerHTML+=`
-
-    <div class="search-item"
-
-    onclick="goToPoster(${originalIndex})">
-
-      <b>📚 ${item.title}</b>
-
-      <small>${item.category}</small>
-
-    </div>
-
-    `;
-
-  });
-
-  renderPoster(hasil);
-
-});
-
-/* ========================= */
-
-function goToPoster(id){
-
-  resultBox.innerHTML="";
-
-  document.getElementById("search").blur();
-
-  setTimeout(()=>{
-
-    const poster=document.getElementById("poster-"+id);
-
-    if(poster){
-
-      poster.scrollIntoView({
-
-        behavior:"smooth",
-
-        block:"start"
-
-      });
+        resultBox.innerHTML="";
+        renderPoster(posterData);
+        return;
 
     }
 
-  },150);
+    const hasil=posterData.filter(item=>
+
+        item.title.toLowerCase().includes(key) ||
+
+        item.category.toLowerCase().includes(key) ||
+
+        item.caption.toLowerCase().includes(key)
+
+    );
+
+    resultBox.innerHTML="";
+
+    if(hasil.length===0){
+
+        resultBox.innerHTML="<div class='search-item'>Tidak ada hasil.</div>";
+
+        return;
+
+    }
+
+    hasil.forEach(item=>{
+
+        resultBox.innerHTML+=`
+
+        <div class="search-item"
+        onclick="pilihPoster('${item.title}')">
+
+            <b>📚 ${item.title}</b>
+
+            <small>${item.category}</small>
+
+        </div>
+
+        `;
+
+    });
+
+});
+
+function pilihPoster(judul){
+
+    resultBox.innerHTML="";
+
+    search.value="";
+
+    const hasil=posterData.filter(item=>item.title===judul);
+
+    renderPoster(hasil);
+
+    setTimeout(()=>{
+
+        document.getElementById("post-list").scrollIntoView({
+
+            behavior:"smooth"
+
+        });
+
+    },150);
 
 }
 
