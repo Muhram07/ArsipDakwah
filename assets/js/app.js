@@ -35,9 +35,12 @@ function renderPoster(data){
 
   data.forEach((item,index)=>{
 
+    const originalIndex=posterData.indexOf(item);
+
     container.innerHTML+=`
 
-    <div class="poster">
+    <div class="poster"
+    id="poster-${originalIndex}">
 
       <img src="${item.image}" alt="${item.title}">
 
@@ -47,20 +50,20 @@ function renderPoster(data){
 
       <small>${item.category}</small>
 
-      <button onclick="toggleCaption(${index})">
+      <button onclick="toggleCaption(${originalIndex})">
 
       📖 Baca Caption
 
       </button>
 
-      <button onclick="copyCaption(${index})">
+      <button onclick="copyCaption(${originalIndex})">
 
       📋 Copy Caption
 
       </button>
 
       <div
-      id="caption-${index}"
+      id="caption-${originalIndex}"
       class="caption-box">
 
       ${item.content}
@@ -130,15 +133,35 @@ search.addEventListener("input",function(){
 
   resultBox.innerHTML="";
 
-  hasil.forEach(item=>{
+  if(hasil.length===0){
 
-    resultBox.innerHTML+=`
+    resultBox.innerHTML=`
 
     <div class="search-item">
 
-      📚 <b>${item.title}</b>
+    Tidak ada hasil.
 
-      <br>
+    </div>
+
+    `;
+
+    renderPoster([]);
+
+    return;
+
+  }
+
+  hasil.forEach(item=>{
+
+    const originalIndex=posterData.indexOf(item);
+
+    resultBox.innerHTML+=`
+
+    <div class="search-item"
+
+    onclick="goToPoster(${originalIndex})">
+
+      <b>📚 ${item.title}</b>
 
       <small>${item.category}</small>
 
@@ -153,5 +176,31 @@ search.addEventListener("input",function(){
 });
 
 /* ========================= */
+
+function goToPoster(id){
+
+  resultBox.innerHTML="";
+
+  document.getElementById("search").blur();
+
+  setTimeout(()=>{
+
+    const poster=document.getElementById("poster-"+id);
+
+    if(poster){
+
+      poster.scrollIntoView({
+
+        behavior:"smooth",
+
+        block:"start"
+
+      });
+
+    }
+
+  },150);
+
+}
 
 loadPosters();
