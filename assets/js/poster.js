@@ -13,7 +13,6 @@ async function loadPoster() {
 
         const posters = await res.json();
 
-        // Kalau URL tidak punya ?id=...
         if (!id) {
             location.href = "/";
             return;
@@ -62,8 +61,11 @@ async function loadPoster() {
         document.getElementById("gambar").alt = poster.title;
 
         document.getElementById("caption").textContent = poster.caption;
-
         document.getElementById("isi").textContent = poster.content;
+
+        /* ======================
+           COPY CAPTION
+        ====================== */
 
         document.getElementById("copy").onclick = function () {
 
@@ -72,6 +74,58 @@ async function loadPoster() {
             alert("✅ Caption berhasil disalin");
 
         };
+
+        /* ======================
+           BAGIKAN
+        ====================== */
+
+        const shareBtn = document.getElementById("share");
+
+        if (shareBtn) {
+
+            shareBtn.onclick = async function () {
+
+                if (navigator.share) {
+
+                    try {
+
+                        await navigator.share({
+
+                            title: poster.title,
+                            text: poster.caption,
+                            url: window.location.href
+
+                        });
+
+                    } catch (e) {}
+
+                } else {
+
+                    navigator.clipboard.writeText(window.location.href);
+
+                    alert("🔗 Link berhasil disalin");
+
+                }
+
+            };
+
+        }
+
+        /* ======================
+           DOWNLOAD POSTER
+        ====================== */
+
+        const downloadBtn = document.getElementById("download");
+
+        if (downloadBtn) {
+
+            downloadBtn.onclick = function () {
+
+                window.open(poster.image, "_blank");
+
+            };
+
+        }
 
     } catch (err) {
 
