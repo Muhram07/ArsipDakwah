@@ -4,30 +4,34 @@ let posterData = [];
    LOAD POSTER
 ========================= */
 
-async function loadPosters() {
+async function loadPosters(){
 
-    try {
+    try{
 
         const res = await fetch("data/posters.json");
 
-        if (!res.ok) throw new Error();
+        if(!res.ok) throw new Error();
 
         posterData = await res.json();
 
         renderPoster(posterData);
 
-        // Kalau categories.js sudah dimuat,
-        // hitung ulang jumlah poster tiap kategori
-        if (typeof updateCategoryCount === "function") {
+        if(typeof updateCategoryCount==="function"){
+
             updateCategoryCount();
+
         }
 
-    } catch (e) {
+    }catch(e){
 
-        document.getElementById("post-list").innerHTML = `
+        document.getElementById("post-list").innerHTML=`
+
         <div class="loading">
-            ❌ Gagal memuat poster.
+
+        ❌ Gagal memuat poster.
+
         </div>
+
         `;
 
     }
@@ -38,85 +42,107 @@ async function loadPosters() {
    RENDER POSTER
 ========================= */
 
-function renderPoster(data) {
+function renderPoster(data){
 
-    const container = document.getElementById("post-list");
+    const container=document.getElementById("post-list");
 
-    container.innerHTML = "";
+    container.innerHTML="";
 
-    if (!data || data.length === 0) {
+    if(!data || data.length===0){
 
-        container.innerHTML = `
+        container.innerHTML=`
+
         <div class="loading">
-            Tidak ada hasil.
+
+        Tidak ada hasil.
+
         </div>
+
         `;
 
         return;
 
     }
 
-    data.forEach(item => {
+    data.forEach(item=>{
 
-        container.innerHTML += `
+        container.innerHTML+=`
 
-        <div class="poster">
+<div class="poster">
 
-            <img
-            src="${item.image}"
-            alt="${item.title}"
-            onclick="bukaPoster('${item.id}')">
+<img
 
-            <h3 onclick="bukaPoster('${item.id}')">
-                ${item.title}
-            </h3>
+src="${item.image}"
 
-            <p>
-                ${item.caption}
-            </p>
+alt="${item.title}"
 
-            <small>
-                📂 ${item.category}
-            </small>
+onclick="bukaPoster('${item.id}')">
 
-            <button
-            onclick="toggleCaption('${item.id}')">
+<h3
 
-                📖 Baca Caption
+onclick="bukaPoster('${item.id}')">
 
-            </button>
+${item.title}
 
-            <button
-            onclick="copyCaption('${item.id}')">
+</h3>
 
-                📋 Copy Caption
+<p>
 
-            </button>
+${item.caption}
 
-            <div
-            id="caption-${item.id}"
-            class="caption-box">
+</p>
+
+<small>
+
+📂 ${item.category}
+
+</small>
+
+<button
+
+onclick="event.stopPropagation();toggleCaption('${item.id}')">
+
+📖 Baca Caption
+
+</button>
+
+<button
+
+onclick="event.stopPropagation();copyCaption('${item.id}')">
+
+📋 Copy Caption
+
+</button>
+
+<div
+
+id="caption-${item.id}"
+
+class="caption-box">
 
 ${item.content}
 
-            </div>
+</div>
 
-        </div>
+</div>
 
-        `;
+`;
 
     });
 
 }
 
 /* =========================
-   DETAIL POSTER
+   DETAIL
 ========================= */
 
-function bukaPoster(id) {
+function bukaPoster(id){
 
-    window.location.href =
-    "poster.html?id=" + encodeURIComponent(id);
+    window.location.href=
+
+    "poster.html?id="+
+
+    encodeURIComponent(id);
 
 }
 
@@ -124,25 +150,31 @@ function bukaPoster(id) {
    CAPTION
 ========================= */
 
-function toggleCaption(id) {
+function toggleCaption(id){
 
-    const box =
-    document.getElementById("caption-" + id);
+    const box=
 
-    if (!box) return;
+    document.getElementById(
 
-    if (box.style.display === "block") {
+    "caption-"+id
 
-        box.style.display = "none";
+    );
 
-    } else {
+    if(!box) return;
 
-        box.style.display = "block";
+    if(box.style.display==="block"){
+
+        box.style.display="none";
+
+    }else{
+
+        box.style.display="block";
 
         box.scrollIntoView({
 
-            behavior: "smooth",
-            block: "center"
+            behavior:"smooth",
+
+            block:"center"
 
         });
 
@@ -150,80 +182,241 @@ function toggleCaption(id) {
 
 }
 
-function copyCaption(id) {
+function copyCaption(id){
 
-    const poster =
-    posterData.find(p => p.id === id);
+    const poster=
 
-    if (!poster) return;
+    posterData.find(
 
-    navigator.clipboard.writeText(poster.content);
+    p=>p.id===id
 
-    alert("✅ Caption berhasil disalin");
+    );
+
+    if(!poster) return;
+
+    navigator.clipboard.writeText(
+
+    poster.content
+
+    );
+
+    alert(
+
+    "✅ Caption berhasil disalin"
+
+    );
 
 }
 
 /* =========================
-   SEARCH
+   LIVE SEARCH
 ========================= */
 
-const search =
-document.getElementById("search");
+const search=
 
-search.addEventListener("input", function () {
+document.getElementById(
 
-    const keyword =
-    this.value.trim().toLowerCase();
+"search"
 
-    if (keyword === "") {
+);
 
-        renderPoster(posterData);
+const resultBox=
 
-        return;
+document.createElement("div");
 
-    }
+resultBox.id="search-result";
 
-    const hasil = posterData.filter(item => {
+search.after(resultBox);
 
-        const tags =
-        (item.tags || []).join(" ").toLowerCase();
+search.addEventListener(
 
-        return (
+"input",
 
-            item.title.toLowerCase().includes(keyword) ||
+function(){
 
-            item.category.toLowerCase().includes(keyword) ||
+const key=
 
-            item.caption.toLowerCase().includes(keyword) ||
+this.value
 
-            tags.includes(keyword)
+.trim()
 
-        );
+.toLowerCase();
 
-    });
+if(key===""){
 
-    renderPoster(hasil);
+resultBox.innerHTML="";
+
+renderPoster(
+
+posterData
+
+);
+
+return;
+
+}
+
+const hasil=
+
+posterData.filter(item=>{
+
+const tags=
+
+(item.tags||[])
+
+.join(" ")
+
+.toLowerCase();
+
+return(
+
+item.title
+
+.toLowerCase()
+
+.includes(key)
+
+||
+
+item.category
+
+.toLowerCase()
+
+.includes(key)
+
+||
+
+item.caption
+
+.toLowerCase()
+
+.includes(key)
+
+||
+
+tags.includes(key)
+
+);
 
 });
+
+   renderPoster(hasil);
+
+resultBox.innerHTML="";
+
+if(hasil.length===0){
+
+resultBox.innerHTML=`
+
+<div class="search-item">
+
+Tidak ada hasil.
+
+</div>
+
+`;
+
+return;
+
+}
+
+hasil.forEach(item=>{
+
+resultBox.innerHTML+=`
+
+<div
+
+class="search-item"
+
+onclick="pilihPoster('${item.id}')">
+
+<b>
+
+📚 ${item.title}
+
+</b>
+
+<br>
+
+<small>
+
+📂 ${item.category}
+
+</small>
+
+</div>
+
+`;
+
+});
+
+}
+
+/* =========================
+   PILIH HASIL PENCARIAN
+========================= */
+
+function pilihPoster(id){
+
+resultBox.innerHTML="";
+
+search.value="";
+
+const hasil=
+
+posterData.filter(
+
+item=>item.id===id
+
+);
+
+renderPoster(hasil);
+
+setTimeout(()=>{
+
+document
+
+.getElementById("post-list")
+
+.scrollIntoView({
+
+behavior:"smooth"
+
+});
+
+},150);
+
+}
 
 /* =========================
    FILTER KATEGORI
 ========================= */
 
-function filterCategory(category) {
+function filterCategory(category){
 
-    const hasil = posterData.filter(item =>
-        item.category === category
-    );
+resultBox.innerHTML="";
 
-    renderPoster(hasil);
+search.value="";
 
-    document.getElementById("post-list")
-    .scrollIntoView({
+const hasil=
 
-        behavior: "smooth"
+posterData.filter(
 
-    });
+item=>item.category===category
+
+);
+
+renderPoster(hasil);
+
+document
+
+.getElementById("post-list")
+
+.scrollIntoView({
+
+behavior:"smooth"
+
+});
 
 }
 
