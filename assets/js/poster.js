@@ -111,21 +111,31 @@ async function loadPoster() {
 
         }
 
-        /* ======================
-           DOWNLOAD POSTER
-        ====================== */
+  /* ======================
+   DOWNLOAD POSTER
+====================== */
 
-        const downloadBtn = document.getElementById("download");
+const downloadBtn = document.getElementById("download");
 
-        if (downloadBtn) {
+if (downloadBtn) {
 
-            downloadBtn.onclick = function () {
+    downloadBtn.onclick = function () {
 
-                window.open(poster.image, "_blank");
+        const a = document.createElement("a");
 
-            };
+        a.href = poster.image;
 
-        }
+        a.download = poster.title + ".jpg";
+
+        document.body.appendChild(a);
+
+        a.click();
+
+        document.body.removeChild(a);
+
+    };
+
+}
 
     } catch (err) {
 
