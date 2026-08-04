@@ -1,8 +1,126 @@
-/* Arsip Dakwah Manhaj Salaf */
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,Helvetica,sans-serif;
+}
 
-:root{
-  --primary:#f4c542;
-  --bg:#0f172a;
-  --card:#1e293b;
-  --text:#ffffff;
+body{
+background:#0b0b0b;
+color:#fff;
+}
+
+.hero{
+background:linear-gradient(135deg,#0f172a,#111827,#1e293b);
+padding:60px 20px;
+text-align:center;
+}
+
+.hero h1{
+font-size:38px;
+color:#FFD700;
+margin-bottom:15px;
+}
+
+.hero p{
+color:#d1d5db;
+font-size:18px;
+margin-bottom:25px;
+}
+
+#search{
+width:100%;
+max-width:650px;
+padding:16px;
+border:none;
+border-radius:12px;
+font-size:18px;
+outline:none;
+}
+
+.kategori{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:18px;
+padding:35px;
+}
+
+.card{
+background:#1a1a1a;
+border-radius:16px;
+padding:22px;
+font-size:22px;
+text-align:center;
+cursor:pointer;
+transition:.25s;
+border:1px solid #2b2b2b;
+}
+
+.card:hover{
+background:#252525;
+transform:translateY(-4px);
+border-color:#FFD700;
+}
+
+.terbaru{
+padding:35px;
+}
+
+.terbaru h2{
+margin-bottom:20px;
+color:#FFD700;
+}
+
+.loading{
+background:#1a1a1a;
+padding:30px;
+border-radius:14px;
+text-align:center;
+color:#999;
+}
+
+footer{
+margin-top:60px;
+padding:40px 20px;
+background:#111827;
+text-align:center;
+}
+
+footer b{
+font-size:22px;
+color:#FFD700;
+}
+
+footer div{
+margin:12px 0;
+}
+
+footer a{
+color:#60a5fa;
+text-decoration:none;
+}
+
+footer a:hover{
+text-decoration:underline;
+}
+
+@media(max-width:768px){
+
+.hero h1{
+font-size:30px;
+}
+
+.hero p{
+font-size:16px;
+}
+
+.kategori{
+padding:20px;
+grid-template-columns:1fr;
+}
+
+.card{
+font-size:20px;
+}
+
 }
