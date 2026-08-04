@@ -125,3 +125,36 @@ transition:.3s;
 
 .poster button:hover{
 background:#ffe55c
+
+  #search-result{
+max-width:650px;
+margin:15px auto;
+padding:0 20px;
+}
+
+.search-item{
+background:#1d1d1d;
+border:1px solid #333;
+border-radius:15px;
+padding:18px;
+margin-bottom:10px;
+cursor:pointer;
+transition:.2s;
+text-align:left;
+}
+
+.search-item:hover{
+background:#2a2a2a;
+}
+
+.search-item b{
+display:block;
+font-size:22px;
+color:#FFD700;
+margin-bottom:5px;
+}
+
+.search-item small{
+font-size:15px;
+color:#bbb;
+}
