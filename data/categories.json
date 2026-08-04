@@ -1,3 +1,62 @@
-{
-  "categories": []
-}
+[
+  {
+    "id":"tauhid",
+    "name":"Tauhid",
+    "icon":"📚"
+  },
+  {
+    "id":"sunnah",
+    "name":"Sunnah",
+    "icon":"📖"
+  },
+  {
+    "id":"bidah",
+    "name":"Bid'ah",
+    "icon":"🚫"
+  },
+  {
+    "id":"syirik",
+    "name":"Syirik",
+    "icon":"⚠️"
+  },
+  {
+    "id":"khurafat",
+    "name":"Khurafat",
+    "icon":"🕸️"
+  },
+  {
+    "id":"aqidah",
+    "name":"Aqidah",
+    "icon":"🕌"
+  },
+  {
+    "id":"fikih",
+    "name":"Fikih",
+    "icon":"⚖️"
+  },
+  {
+    "id":"hadits",
+    "name":"Hadits",
+    "icon":"📜"
+  },
+  {
+    "id":"tafsir",
+    "name":"Tafsir",
+    "icon":"📖"
+  },
+  {
+    "id":"akhlak",
+    "name":"Akhlak",
+    "icon":"❤️"
+  },
+  {
+    "id":"muamalah",
+    "name":"Muamalah",
+    "icon":"💼"
+  },
+  {
+    "id":"tanya-jawab",
+    "name":"Tanya Jawab",
+    "icon":"❓"
+  }
+]
