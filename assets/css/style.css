@@ -135,8 +135,10 @@ background:#0f0f0f;
 border-left:4px solid #FFD700;
 border-radius:10px;
 line-height:1.8;
+font-size:18px;
+text-align:center;
 white-space:pre-wrap;
-}
+  }
 
 footer{
 padding:50px 20px;
