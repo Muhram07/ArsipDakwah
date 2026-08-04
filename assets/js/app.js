@@ -2,8 +2,6 @@ let posterData = [];
 
 async function loadPosters() {
 
-  const container = document.getElementById("post-list");
-
   try {
 
     const res = await fetch("data/posters.json");
@@ -14,7 +12,8 @@ async function loadPosters() {
 
   } catch (e) {
 
-    container.innerHTML = "<h3>Gagal memuat data.</h3>";
+    document.getElementById("post-list").innerHTML =
+      "<h3>Gagal memuat data.</h3>";
 
   }
 
@@ -25,6 +24,14 @@ function renderPoster(data){
   const container=document.getElementById("post-list");
 
   container.innerHTML="";
+
+  if(data.length===0){
+
+    container.innerHTML="<h3>Tidak ada hasil.</h3>";
+
+    return;
+
+  }
 
   data.forEach((item,index)=>{
 
@@ -41,11 +48,15 @@ function renderPoster(data){
       <small>${item.category}</small>
 
       <button onclick="toggleCaption(${index})">
+
       📖 Baca Caption
+
       </button>
 
       <button onclick="copyCaption(${index})">
+
       📋 Copy Caption
+
       </button>
 
       <div
@@ -68,15 +79,8 @@ function toggleCaption(id){
 
   const box=document.getElementById("caption-"+id);
 
-  if(box.style.display==="block"){
-
-    box.style.display="none";
-
-  }else{
-
-    box.style.display="block";
-
-  }
+  box.style.display=
+  box.style.display==="block" ? "none":"block";
 
 }
 
@@ -88,26 +92,66 @@ function copyCaption(id){
 
 }
 
-document.addEventListener("input",function(e){
+/* ===========================
+   LIVE SEARCH
+=========================== */
 
-  if(e.target.id==="search"){
+const search=document.getElementById("search");
 
-    const key=e.target.value.toLowerCase();
+const resultBox=document.createElement("div");
 
-    const hasil=posterData.filter(item=>
+resultBox.id="search-result";
 
-      item.title.toLowerCase().includes(key)||
+search.after(resultBox);
 
-      item.category.toLowerCase().includes(key)||
+search.addEventListener("input",function(){
 
-      item.caption.toLowerCase().includes(key)
+  const key=this.value.trim().toLowerCase();
 
-    );
+  if(key===""){
 
-    renderPoster(hasil);
+    resultBox.innerHTML="";
+
+    renderPoster(posterData);
+
+    return;
 
   }
 
+  const hasil=posterData.filter(item=>
+
+    item.title.toLowerCase().includes(key)||
+
+    item.category.toLowerCase().includes(key)||
+
+    item.caption.toLowerCase().includes(key)
+
+  );
+
+  resultBox.innerHTML="";
+
+  hasil.forEach(item=>{
+
+    resultBox.innerHTML+=`
+
+    <div class="search-item">
+
+      📚 <b>${item.title}</b>
+
+      <br>
+
+      <small>${item.category}</small>
+
+    </div>
+
+    `;
+
+  });
+
+  renderPoster(hasil);
+
 });
+
+/* ========================= */
 
 loadPosters();
