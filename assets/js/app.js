@@ -1,4 +1,11 @@
 let posterData = [];
+let categoryData = [];
+
+const search = document.getElementById("search");
+
+const resultBox = document.createElement("div");
+resultBox.id = "search-result";
+search.after(resultBox);
 
 async function loadPosters(){
 
@@ -17,6 +24,46 @@ async function loadPosters(){
 
 }
 
+async function loadCategories(){
+
+    try{
+
+        const res = await fetch("data/categories.json");
+
+        categoryData = await res.json();
+
+        const box = document.getElementById("kategori-list");
+
+        box.innerHTML="";
+
+        categoryData.forEach(cat=>{
+
+            box.innerHTML += `
+
+            <div class="card"
+
+            onclick="filterKategori('${cat.id}')">
+
+            ${cat.icon}
+
+            <br><br>
+
+            ${cat.name}
+
+            </div>
+
+            `;
+
+        });
+
+    }catch(e){
+
+        console.log(e);
+
+    }
+
+}
+
 function renderPoster(data){
 
     const container=document.getElementById("post-list");
@@ -26,17 +73,20 @@ function renderPoster(data){
     if(data.length===0){
 
         container.innerHTML="<h3>Tidak ada hasil.</h3>";
+
         return;
 
     }
 
-    data.forEach((item,index)=>{
+    data.forEach(item=>{
 
         container.innerHTML+=`
 
-        <div class="poster" id="poster-${index}">
+        <div class="poster"
 
-            <img src="${item.image}" alt="${item.title}">
+        id="${item.id}">
+
+            <img src="${item.image}">
 
             <h3>${item.title}</h3>
 
@@ -44,16 +94,22 @@ function renderPoster(data){
 
             <small>${item.category}</small>
 
-            <button onclick="toggleCaption(${index})">
+            <button onclick="toggleCaption('${item.id}')">
+
             📖 Baca Caption
+
             </button>
 
-            <button onclick="copyCaption(${index})">
+            <button onclick="copyCaption('${item.id}')">
+
             📋 Copy Caption
+
             </button>
 
             <div
-            id="caption-${index}"
+
+            id="caption-${item.id}"
+
             class="caption-box">
 
 ${item.content}
@@ -94,19 +150,33 @@ function toggleCaption(id){
 
 function copyCaption(id){
 
-    navigator.clipboard.writeText(posterData[id].content);
+    const poster=posterData.find(p=>p.id===id);
+
+    navigator.clipboard.writeText(poster.content);
 
     alert("✅ Caption berhasil disalin");
 
 }
 
-const search=document.getElementById("search");
+function filterKategori(id){
 
-const resultBox=document.createElement("div");
+    resultBox.innerHTML="";
 
-resultBox.id="search-result";
+    search.value="";
 
-search.after(resultBox);
+    const hasil=posterData.filter(p=>p.category===id);
+
+    renderPoster(hasil);
+
+    document.getElementById("post-list")
+
+    .scrollIntoView({
+
+        behavior:"smooth"
+
+    });
+
+}
 
 search.addEventListener("input",function(){
 
@@ -115,18 +185,22 @@ search.addEventListener("input",function(){
     if(key===""){
 
         resultBox.innerHTML="";
+
         renderPoster(posterData);
+
         return;
 
     }
 
     const hasil=posterData.filter(item=>
 
-        item.title.toLowerCase().includes(key) ||
+        item.title.toLowerCase().includes(key)||
 
-        item.category.toLowerCase().includes(key) ||
+        item.category.toLowerCase().includes(key)||
 
-        item.caption.toLowerCase().includes(key)
+        item.caption.toLowerCase().includes(key)||
+
+        item.tags.join(" ").toLowerCase().includes(key)
 
     );
 
@@ -144,12 +218,15 @@ search.addEventListener("input",function(){
 
         resultBox.innerHTML+=`
 
-        <div class="search-item"
-        onclick="pilihPoster('${item.title}')">
+        <div
 
-            <b>📚 ${item.title}</b>
+        class="search-item"
 
-            <small>${item.category}</small>
+        onclick="goPoster('${item.id}')">
+
+        <b>${item.title}</b>
+
+        <small>${item.category}</small>
 
         </div>
 
@@ -159,26 +236,30 @@ search.addEventListener("input",function(){
 
 });
 
-function pilihPoster(judul){
+function goPoster(id){
 
     resultBox.innerHTML="";
 
     search.value="";
 
-    const hasil=posterData.filter(item=>item.title===judul);
-
-    renderPoster(hasil);
+    renderPoster(posterData);
 
     setTimeout(()=>{
 
-        document.getElementById("post-list").scrollIntoView({
+        document.getElementById(id)
 
-            behavior:"smooth"
+        .scrollIntoView({
+
+            behavior:"smooth",
+
+            block:"start"
 
         });
 
     },150);
 
 }
+
+loadCategories();
 
 loadPosters();
