@@ -111,27 +111,27 @@ async function loadPoster() {
 
         }
 
-  /* ======================
-   DOWNLOAD POSTER
+/* ======================
+   LIHAT POSTER HD
 ====================== */
 
 const downloadBtn = document.getElementById("download");
 
 if (downloadBtn) {
 
+    downloadBtn.innerHTML = "🖼️ Lihat Poster HD";
+
+    downloadBtn.title = "Buka poster resolusi asli";
+
     downloadBtn.onclick = function () {
 
-        const a = document.createElement("a");
+        const win = window.open(poster.image, "_blank");
 
-        a.href = poster.image;
+        if (!win) {
 
-        a.download = poster.title + ".jpg";
+            alert("Browser memblokir tab baru. Izinkan pop-up lalu coba lagi.");
 
-        document.body.appendChild(a);
-
-        a.click();
-
-        document.body.removeChild(a);
+        }
 
     };
 
