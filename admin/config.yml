@@ -3,6 +3,10 @@ backend:
   repo: Muhram07/ArsipDakwah
   branch: main
 
+site_url: https://tangerine-dodol-29c8e4.netlify.app
+display_url: https://tangerine-dodol-29c8e4.netlify.app
+logo_url: https://tangerine-dodol-29c8e4.netlify.app/favicon.ico
+
 media_folder: "assets/img"
 public_folder: "/assets/img"
 
