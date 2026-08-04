@@ -139,10 +139,36 @@ white-space:pre-wrap;
 }
 
 footer{
-padding:40px 20px;
+padding:50px 20px;
 text-align:center;
 color:#bbb;
+line-height:1.8;
+font-size:17px;
 }
+
+footer b{
+display:block;
+font-size:28px;
+color:#fff;
+margin-bottom:10px;
+}
+
+footer .akun{
+margin:15px 0;
+}
+
+footer .akun a{
+display:inline-block;
+margin:5px 8px;
+font-weight:bold;
+color:#FFD700;
+}
+
+footer p{
+margin-top:18px;
+font-size:15px;
+color:#888;
+  }
 
 #search-result{
 max-width:650px;
