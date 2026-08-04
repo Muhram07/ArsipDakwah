@@ -1,6 +1,6 @@
-async function loadCategories() {
+async function loadCategories(){
 
-    try {
+    try{
 
         const res = await fetch("data/categories.json");
         const categories = await res.json();
@@ -9,28 +9,44 @@ async function loadCategories() {
 
         container.innerHTML = "";
 
-        categories.forEach(cat => {
+        categories.forEach(cat=>{
+
+            const jumlah =
+            posterData.filter(p=>p.category===cat.name).length;
 
             container.innerHTML += `
 
             <div class="card"
-                 onclick="filterCategory('${cat.name}')">
+                 id="cat-${cat.id}"
+                 onclick="filterCategory('${cat.name}','${cat.id}')">
 
-                <div style="font-size:40px;margin-bottom:12px;">
+                <div style="font-size:42px">
                     ${cat.icon}
                 </div>
 
-                <div style="font-size:24px;font-weight:bold;">
+                <h3 style="
+                    margin-top:12px;
+                    font-size:24px;
+                    color:white;
+                ">
                     ${cat.name}
-                </div>
+                </h3>
 
-                <div style="
-                    font-size:15px;
-                    color:#bbb;
+                <p style="
                     margin-top:10px;
+                    color:#bdbdbd;
                     line-height:1.6;
+                    font-size:15px;
                 ">
                     ${cat.description}
+                </p>
+
+                <div style="
+                    margin-top:18px;
+                    color:#FFD700;
+                    font-weight:bold;
+                ">
+                    📄 ${jumlah} Poster
                 </div>
 
             </div>
@@ -39,27 +55,48 @@ async function loadCategories() {
 
         });
 
-    } catch (e) {
+    }catch(e){
 
-        document.getElementById("category-list").innerHTML =
-        "<p>❌ Gagal memuat kategori.</p>";
+        document.getElementById("category-list").innerHTML=
+
+        "<h3>❌ Gagal memuat kategori.</h3>";
 
     }
 
 }
 
-function filterCategory(category){
+function filterCategory(category,id){
 
-    const hasil = posterData.filter(item =>
-        item.category === category
+    document.querySelectorAll(".card").forEach(card=>{
+
+        card.style.borderColor="#222";
+        card.style.boxShadow="none";
+
+    });
+
+    const aktif=document.getElementById("cat-"+id);
+
+    if(aktif){
+
+        aktif.style.borderColor="#FFD700";
+        aktif.style.boxShadow="0 0 20px rgba(255,215,0,.35)";
+
+    }
+
+    const hasil = posterData.filter(item=>
+
+        item.category===category
+
     );
 
     renderPoster(hasil);
 
     document.getElementById("post-list")
-        .scrollIntoView({
-            behavior:"smooth"
-        });
+    .scrollIntoView({
+
+        behavior:"smooth"
+
+    });
 
 }
 
