@@ -193,4 +193,130 @@ color:#fff;
 }
 
 footer p{
-margin-top
+margin-top:18px;
+font-size:15px;
+color:#888;
+}
+
+/* Loading */
+
+.loading{
+text-align:center;
+padding:40px 20px;
+font-size:20px;
+color:#aaa;
+}
+
+/* Judul Section */
+
+.judul{
+font-size:34px;
+color:#FFD700;
+padding:0 30px;
+margin:20px 0 25px;
+font-weight:bold;
+}
+
+/* Animasi */
+
+@keyframes fadeIn{
+
+from{
+
+opacity:0;
+transform:translateY(10px);
+
+}
+
+to{
+
+opacity:1;
+transform:translateY(0);
+
+}
+
+}
+
+/* Responsive */
+
+@media(max-width:768px){
+
+.hero{
+
+padding:45px 18px;
+
+}
+
+.hero h1{
+
+font-size:30px;
+
+}
+
+.hero p{
+
+font-size:17px;
+
+}
+
+#search{
+
+font-size:17px;
+padding:15px;
+
+}
+
+.kategori{
+
+grid-template-columns:1fr;
+padding:20px;
+
+}
+
+.judul{
+
+font-size:28px;
+padding:0 20px;
+
+}
+
+.poster h3{
+
+font-size:25px;
+
+}
+
+.poster p{
+
+font-size:17px;
+
+}
+
+.poster button{
+
+display:block;
+width:calc(100% - 44px);
+margin:0 22px 15px;
+
+}
+
+.caption-box{
+
+margin:20px;
+font-size:17px;
+
+}
+
+footer{
+
+padding:40px 20px;
+
+}
+
+footer b{
+
+font-size:24px;
+
+}
+
+  }
