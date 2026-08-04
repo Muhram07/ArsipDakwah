@@ -2,86 +2,86 @@ const params = new URLSearchParams(window.location.search);
 
 const id = params.get("id");
 
-async function loadPoster() {
+async function loadPoster(){
 
-    try {
+    try{
 
         const res = await fetch("data/posters.json");
 
         const posters = await res.json();
 
-        const poster = posters.find(item => item.id === id);
+        const poster = posters.find(item=>item.id===id);
 
-        const detail = document.getElementById("detail");
+        if(!poster){
 
-        if (!poster) {
+            document.body.innerHTML=`
 
-            detail.innerHTML = "<h2>Poster tidak ditemukan.</h2>";
+            <div style="
+                text-align:center;
+                margin-top:100px;
+                color:white;
+                font-size:30px;
+            ">
+
+            ❌ Poster tidak ditemukan
+
+            </div>
+
+            `;
 
             return;
 
         }
 
-        document.title = poster.title;
+        document.title=poster.title;
 
-        document.getElementById("judul").innerText = poster.title;
+        document.getElementById("judul").textContent=
+        poster.title;
 
-        detail.innerHTML = `
+        document.getElementById("judul2").textContent=
+        poster.title;
 
-        <div class="poster">
+        document.getElementById("kategori").textContent=
+        "📚 "+poster.category;
 
-            <img src="${poster.image}" alt="${poster.title}">
+        document.getElementById("gambar").src=
+        poster.image;
 
-            <h3>${poster.title}</h3>
+        document.getElementById("gambar").alt=
+        poster.title;
 
-            <p>${poster.caption}</p>
+        document.getElementById("caption").textContent=
+        poster.caption;
 
-            <small>${poster.category}</small>
+        document.getElementById("isi").textContent=
+        poster.content;
 
-            <button onclick="copyCaption()">
+        document.getElementById("copy").onclick=function(){
 
-                📋 Copy Caption
+            navigator.clipboard.writeText(poster.content);
 
-            </button>
+            alert("✅ Caption berhasil disalin");
 
-            <a href="${poster.image}" download>
+        };
 
-                <button>
+    }catch(e){
 
-                    📥 Download Poster
+        document.body.innerHTML=`
 
-                </button>
+        <div style="
+            text-align:center;
+            margin-top:100px;
+            color:white;
+            font-size:30px;
+        ">
 
-            </a>
-
-            <div class="caption-box" style="display:block">
-
-                ${poster.content}
-
-            </div>
+        ❌ Gagal memuat poster
 
         </div>
 
         `;
 
-        window.caption = poster.content;
-
     }
-
-    catch (e) {
-
-        document.getElementById("detail").innerHTML =
-        "<h2>Gagal memuat poster.</h2>";
-
-    }
-
-}
-
-function copyCaption() {
-
-    navigator.clipboard.writeText(window.caption);
-
-    alert("✅ Caption berhasil disalin");
 
 }
 
