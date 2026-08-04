@@ -124,3 +124,60 @@ font-size:20px;
 }
 
 }
+.poster{
+background:#181818;
+padding:20px;
+border-radius:16px;
+margin:25px 0;
+}
+
+.poster img{
+width:100%;
+border-radius:14px;
+display:block;
+margin-bottom:15px;
+}
+
+.poster h3{
+font-size:28px;
+margin:10px 0;
+}
+
+.poster p{
+font-size:18px;
+line-height:1.6;
+}
+
+.poster small{
+display:block;
+margin:10px 0 20px;
+color:#aaa;
+font-size:15px;
+}
+
+.poster button{
+background:#FFD700;
+color:#111;
+border:none;
+padding:12px 18px;
+margin:6px;
+border-radius:10px;
+font-size:16px;
+font-weight:bold;
+cursor:pointer;
+}
+
+.poster button:hover{
+background:#ffea70;
+}
+
+.caption-box{
+margin-top:20px;
+padding:18px;
+background:#101010;
+border-left:4px solid #FFD700;
+border-radius:10px;
+white-space:pre-wrap;
+line-height:1.8;
+font-size:17px;
+}
