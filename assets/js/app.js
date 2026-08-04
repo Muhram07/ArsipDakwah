@@ -5,6 +5,7 @@ async function loadPosters(){
     try{
 
         const res = await fetch("data/posters.json");
+
         posterData = await res.json();
 
         renderPoster(posterData);
@@ -32,11 +33,13 @@ function renderPoster(data){
 
     }
 
-    data.forEach((item,index)=>{
+    data.forEach(item=>{
 
         container.innerHTML+=`
 
-        <div class="poster">
+        <div class="poster"
+        onclick="bukaPoster('${item.id}')"
+        style="cursor:pointer;">
 
             <img src="${item.image}" alt="${item.title}">
 
@@ -44,22 +47,26 @@ function renderPoster(data){
 
             <p>${item.caption}</p>
 
-            <small>${item.category}</small>
+            <small>📂 ${item.category}</small>
 
-            <button onclick="toggleCaption(${index})">
+            <div style="padding:0 20px 20px;">
 
-                📖 Baca Caption
+                <button onclick="event.stopPropagation();toggleCaption('${item.id}')">
 
-            </button>
+                    📖 Baca Caption
 
-            <button onclick="copyCaption(${index})">
+                </button>
 
-                📋 Copy Caption
+                <button onclick="event.stopPropagation();copyCaption('${item.id}')">
 
-            </button>
+                    📋 Copy Caption
+
+                </button>
+
+            </div>
 
             <div
-            id="caption-${index}"
+            id="caption-${item.id}"
             class="caption-box">
 
 ${item.content}
@@ -74,38 +81,50 @@ ${item.content}
 
 }
 
+function bukaPoster(id){
+
+    location.href="poster.html?id="+id;
+
+}
+
 function toggleCaption(id){
 
     const box=document.getElementById("caption-"+id);
 
-    box.style.display=
-    box.style.display==="block"
-    ? "none"
-    : "block";
+    if(box.style.display==="block"){
+
+        box.style.display="none";
+
+    }else{
+
+        box.style.display="block";
+
+        box.scrollIntoView({
+
+            behavior:"smooth",
+            block:"center"
+
+        });
+
+    }
 
 }
 
 function copyCaption(id){
 
-    navigator.clipboard.writeText(
-        posterData[id].content
-    );
+    const poster=posterData.find(p=>p.id===id);
+
+    navigator.clipboard.writeText(poster.content);
 
     alert("✅ Caption berhasil disalin");
 
 }
 
-/* =======================
-      SEARCH
-======================= */
-
 const search=document.getElementById("search");
 
 search.addEventListener("input",function(){
 
-    const key=this.value
-    .trim()
-    .toLowerCase();
+    const key=this.value.trim().toLowerCase();
 
     if(key===""){
 
@@ -117,9 +136,7 @@ search.addEventListener("input",function(){
 
     const hasil=posterData.filter(item=>{
 
-        const tagText=(item.tags||[])
-        .join(" ")
-        .toLowerCase();
+        const tags=(item.tags||[]).join(" ").toLowerCase();
 
         return(
 
@@ -135,7 +152,7 @@ search.addEventListener("input",function(){
 
             ||
 
-            tagText.includes(key)
+            tags.includes(key)
 
         );
 
