@@ -1,7 +1,7 @@
 /* =========================================================
    PERBAIKAN TOKEN (GANTI BAGIAN INI)
    ========================================================= */
-const GITHUB_TOKEN = "MASUKKAN_TOKEN_GITHUB_ANDA_DI_SINI"; // <-- GANTI INI
+const GITHUB_TOKEN = "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"; // <-- GANTI INI
 const GITHUB_OWNER = "Muhram07";
 const GITHUB_REPO = "ArsipDakwah";
 const BRANCH = "main";
