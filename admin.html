@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="id">
+
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+
+<title>Admin Arsip Dakwah</title>
+
+<style>
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+background:#0b0b0b;
+color:#fff;
+padding:20px;
+}
+
+.card{
+max-width:700px;
+margin:auto;
+background:#181818;
+padding:25px;
+border-radius:18px;
+border:1px solid #333;
+}
+
+h1{
+text-align:center;
+color:#FFD700;
+margin-bottom:25px;
+}
+
+label{
+display:block;
+margin-top:18px;
+margin-bottom:8px;
+font-weight:bold;
+}
+
+input,
+select,
+textarea{
+
+width:100%;
+padding:14px;
+border:none;
+border-radius:10px;
+font-size:16px;
+}
+
+textarea{
+
+height:180px;
+resize:vertical;
+
+}
+
+button{
+
+width:100%;
+margin-top:25px;
+padding:16px;
+font-size:18px;
+font-weight:bold;
+border:none;
+border-radius:12px;
+background:#FFD700;
+cursor:pointer;
+
+}
+
+button:hover{
+
+background:#ffe55c;
+
+}
+
+.preview{
+
+margin-top:15px;
+text-align:center;
+
+}
+
+.preview img{
+
+max-width:100%;
+border-radius:10px;
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="card">
+
+<h1>📚 Admin Arsip Dakwah</h1>
+
+<label>🖼 Upload Poster</label>
+
+<input
+type="file"
+id="poster"
+accept="image/*">
+
+<div
+class="preview">
+
+<img
+id="preview">
+
+</div>
+
+<label>📄 Upload PDF (Opsional)</label>
+
+<input
+type="file"
+id="pdf"
+accept=".pdf">
+
+<label>Judul</label>
+
+<input
+id="title"
+placeholder="Masukkan judul">
+
+<label>Kategori</label>
+
+<select id="category">
+
+<option>Tauhid</option>
+<option>Syirik</option>
+<option>Bid'ah</option>
+<option>Sunnah</option>
+<option>Aqidah</option>
+<option>Fikih</option>
+<option>Hadits</option>
+<option>Tafsir</option>
+<option>Akhlak</option>
+<option>Muamalah</option>
+
+</select>
+
+<label>Tag</label>
+
+<input
+id="tags"
+placeholder="tauhid, aqidah, ibadah">
+
+<label>Caption Pendek</label>
+
+<textarea
+id="caption"></textarea>
+
+<label>Isi Caption Lengkap</label>
+
+<textarea
+id="content"></textarea>
+
+<button
+onclick="kirim()">
+
+🚀 Kirim Poster
+
+</button>
+
+</div>
+
+<script>
+
+poster.onchange=function(){
+
+preview.src=
+URL.createObjectURL(this.files[0]);
+
+}
+
+function kirim(){
+
+alert(
+
+"Form siap.\n\nTahap berikutnya tinggal disambungkan ke GitHub."
+
+);
+
+}
+
+</script>
+
+</body>
+
+  </html>
