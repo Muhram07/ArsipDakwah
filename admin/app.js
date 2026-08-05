@@ -14,6 +14,15 @@ document.getElementById("adminName");
 const tambahBtn =
 document.getElementById("btnTambah");
 
+const arsipBtn =
+document.getElementById("btnArsip");
+
+const statistikBtn =
+document.getElementById("btnStatistik");
+
+const settingBtn =
+document.getElementById("btnSetting");
+
 const kembaliBtn =
 document.getElementById("btnKembali");
 
@@ -90,8 +99,49 @@ if(tambahBtn){
 tambahBtn.onclick=function(){
 
 adminDashboard.style.display="none";
-
 adminUploadPage.style.display="block";
+
+};
+
+}
+
+/* ===========================
+   SEMUA ARSIP
+=========================== */
+
+if(arsipBtn){
+
+arsipBtn.onclick=function(){
+
+location.href="arsip.html";
+
+};
+
+}
+
+/* ===========================
+   STATISTIK
+=========================== */
+
+if(statistikBtn){
+
+statistikBtn.onclick=function(){
+
+alert("Halaman Statistik akan dibuat pada tahap berikutnya.");
+
+};
+
+}
+
+/* ===========================
+   PENGATURAN
+=========================== */
+
+if(settingBtn){
+
+settingBtn.onclick=function(){
+
+alert("Halaman Pengaturan akan dibuat pada tahap berikutnya.");
 
 };
 
@@ -106,7 +156,6 @@ if(kembaliBtn){
 kembaliBtn.onclick=function(){
 
 adminUploadPage.style.display="none";
-
 adminDashboard.style.display="block";
 
 };
