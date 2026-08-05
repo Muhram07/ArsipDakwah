@@ -23,6 +23,12 @@ document.getElementById("btnPreview");
 const simpanBtn =
 document.getElementById("btnSimpan");
 
+const posterFile =
+document.getElementById("posterFile");
+
+const posterList =
+document.getElementById("posterList");
+
 /* ===========================
    LOAD
 =========================== */
@@ -39,18 +45,55 @@ window.onload=function(){
 };
 
 /* ===========================
+   TAMPILKAN DAFTAR GAMBAR
+=========================== */
+
+if(posterFile){
+
+posterFile.onchange=function(){
+
+posterList.innerHTML="";
+
+const files=this.files;
+
+if(files.length==0){
+
+posterList.innerHTML="";
+
+return;
+
+}
+
+let html="";
+
+html+="<br>";
+html+="<b>"+files.length+" Part Dipilih</b><br><br>";
+
+for(let i=0;i<files.length;i++){
+
+html+="✅ Part "+(i+1)+" : "+files[i].name+"<br>";
+
+}
+
+posterList.innerHTML=html;
+
+};
+
+}
+
+/* ===========================
    TAMBAH POSTER
 =========================== */
 
 if(tambahBtn){
 
-    tambahBtn.onclick=function(){
+tambahBtn.onclick=function(){
 
-        adminDashboard.style.display="none";
+adminDashboard.style.display="none";
 
-        adminUploadPage.style.display="block";
+adminUploadPage.style.display="block";
 
-    };
+};
 
 }
 
@@ -60,13 +103,13 @@ if(tambahBtn){
 
 if(kembaliBtn){
 
-    kembaliBtn.onclick=function(){
+kembaliBtn.onclick=function(){
 
-        adminUploadPage.style.display="none";
+adminUploadPage.style.display="none";
 
-        adminDashboard.style.display="block";
+adminDashboard.style.display="block";
 
-    };
+};
 
 }
 
@@ -84,13 +127,20 @@ document.getElementById("judul").value;
 const kategori=
 document.getElementById("kategori").value;
 
+const total=
+posterFile.files.length;
+
 alert(
 
-"PREVIEW\n\n"+
+"========== PREVIEW ==========\n\n"+
 
 "Judul : "+judul+
 
-"\nKategori : "+kategori
+"\nKategori : "+kategori+
+
+"\nJumlah Part : "+total+
+
+"\n\nSiap dipublikasikan."
 
 );
 
@@ -117,11 +167,21 @@ return;
 
 }
 
+if(posterFile.files.length==0){
+
+alert("Pilih minimal satu gambar.");
+
+return;
+
+}
+
 alert(
 
-"Poster siap disimpan.\n\n"+
+"✅ "+posterFile.files.length+
 
-"Tahap berikutnya kita akan membuat tombol ini benar-benar mengirim data ke GitHub."
+" gambar siap diproses.\n\n"+
+
+"Pada tahap berikutnya tombol ini akan benar-benar mengirim semua file ke GitHub dan memperbarui arsip secara otomatis."
 
 );
 
