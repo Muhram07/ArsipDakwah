@@ -1,0 +1,8 @@
+{
+  "tasks": {
+    "start": "deno run -A api.js"
+  },
+  "imports": {
+    "octokit": "https://esm.sh/octokit"
+  }
+}
