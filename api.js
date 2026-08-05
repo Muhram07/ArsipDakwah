@@ -10,8 +10,8 @@ export default async function handler(req, res) {
   // Ambil Owner & Repo otomatis dari URL
   const url = new URL(`https://${req.headers.host}`);
   const pathParts = url.pathname.split('/');
-  const GITHUB_OWNER = pathParts[1]; // Otomatis ambil "muhram07"
-  const GITHUB_REPO = "ArsipDakwah"; // Hardcode nama repo
+  const GITHUB_OWNER = pathParts[1];
+  const GITHUB_REPO = "ArsipDakwah";
 
   if (!GITHUB_TOKEN) {
     return res.status(500).json({ success: false, message: "GITHUB_TOKEN belum diset!" });
@@ -19,6 +19,11 @@ export default async function handler(req, res) {
 
   try {
     const { title, category, tags, caption, content, imageBase64, filename } = req.body;
+    
+    if (!title || !imageBase64 || !filename) {
+      return res.status(400).json({ success: false, message: "Data tidak lengkap" });
+    }
+
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
     
     // Upload gambar
