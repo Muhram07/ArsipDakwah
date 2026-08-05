@@ -150,7 +150,7 @@
         alert("========== PREVIEW ==========\n\nJudul : " + judul + "\nKategori : " + kategori + "\nJumlah Part : " + total + "\n\nSiap dipublikasikan.");
     };
 
-    // SIMPAN (Mengarah ke Deno API /api/main.ts)
+    // SIMPAN (Mengarah ke API Vercel /api.js)
     simpanBtn.onclick = async function() {
         const judul = document.getElementById("judul").value.trim();
         const kategori = document.getElementById("kategori").value;
@@ -169,8 +169,8 @@
         reader.onload = async function(e) {
             const base64String = e.target.result.split(',')[1];
             try {
-                // PERUBAHAN PENTING: Ganti '/api.js' menjadi '/api/main.ts'
-                const response = await fetch('/api/main.ts', {
+                // PERUBAHAN: Arahkan ke /api.js, bukan /api/main.ts
+                const response = await fetch('/api.js', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
