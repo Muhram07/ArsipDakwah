@@ -1,4 +1,12 @@
-// api/github.js (Untuk Vercel Serverless Functions)
+/* =========================================================
+   PERBAIKAN TOKEN (GANTI BAGIAN INI)
+   ========================================================= */
+const GITHUB_TOKEN = "MASUKKAN_TOKEN_GITHUB_ANDA_DI_SINI"; // <-- GANTI INI
+const GITHUB_OWNER = "Muhram07";
+const GITHUB_REPO = "ArsipDakwah";
+const BRANCH = "main";
+/* ========================================================= */
+
 import { Octokit } from "@octokit/rest";
 
 export default async function handler(req, res) {
@@ -6,14 +14,8 @@ export default async function handler(req, res) {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
-  // Ambil data dari Environment Variables di Vercel
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const GITHUB_OWNER = process.env.GITHUB_OWNER;
-  const GITHUB_REPO = process.env.GITHUB_REPO;
-  const BRANCH = "main";
-
-  if (!GITHUB_TOKEN || !GITHUB_OWNER || !GITHUB_REPO) {
-    return res.status(500).json({ error: "Server tidak terkonfigurasi (Token hilang)" });
+  if (!GITHUB_TOKEN || GITHUB_TOKEN === "MASUKKAN_TOKEN_GITHUB_ANDA_DI_SINI") {
+    return res.status(500).json({ success: false, message: "Token GitHub belum diisi di file api/github.js" });
   }
 
   try {
@@ -73,4 +75,4 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-      }
+                                }
