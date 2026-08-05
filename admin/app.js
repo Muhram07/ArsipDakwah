@@ -2,71 +2,71 @@
    ADMIN PANEL
 =========================== */
 
-const dashboard =
+const adminDashboard =
 document.getElementById("dashboard");
 
-const uploadPage =
+const adminUploadPage =
 document.getElementById("uploadPage");
 
-const btnTambah =
-document.getElementById("btnTambah");
-
-const btnKembali =
-document.getElementById("btnKembali");
-
-const btnPreview =
-document.getElementById("btnPreview");
-
-const btnSimpan =
-document.getElementById("btnSimpan");
-
-const adminName =
+const adminNameText =
 document.getElementById("adminName");
 
+const tambahBtn =
+document.getElementById("btnTambah");
+
+const kembaliBtn =
+document.getElementById("btnKembali");
+
+const previewBtn =
+document.getElementById("btnPreview");
+
+const simpanBtn =
+document.getElementById("btnSimpan");
+
 /* ===========================
-   LOAD ADMIN
+   LOAD
 =========================== */
 
-document.addEventListener("DOMContentLoaded",()=>{
+window.onload=function(){
 
-    if(adminName){
+    if(adminNameText){
 
-        adminName.textContent =
+        adminNameText.textContent=
         ADMIN_CONFIG.NAME;
 
     }
 
-});
+};
 
 /* ===========================
-   BUKA HALAMAN TAMBAH POSTER
+   TAMBAH POSTER
 =========================== */
 
-if(btnTambah){
+if(tambahBtn){
 
-btnTambah.onclick=function(){
+    tambahBtn.onclick=function(){
 
-dashboard.style.display="none";
+        adminDashboard.style.display="none";
 
-uploadPage.style.display="block";
+        adminUploadPage.style.display="block";
 
-};
+    };
 
 }
 
 /* ===========================
-   KEMBALI KE DASHBOARD
+   KEMBALI
 =========================== */
 
-if(btnKembali){
+if(kembaliBtn){
 
-btnKembali.onclick=function(){
+    kembaliBtn.onclick=function(){
 
-uploadPage.style.display="none";
+        adminUploadPage.style.display="none";
 
-dashboard.style.display="block";
+        adminDashboard.style.display="block";
 
-};
+    };
 
 }
 
@@ -74,25 +74,23 @@ dashboard.style.display="block";
    PREVIEW
 =========================== */
 
-if(btnPreview){
+if(previewBtn){
 
-btnPreview.onclick=function(){
+previewBtn.onclick=function(){
 
-const judul =
+const judul=
 document.getElementById("judul").value;
 
-const kategori =
+const kategori=
 document.getElementById("kategori").value;
 
 alert(
 
-"Preview\n\n"+
+"PREVIEW\n\n"+
 
 "Judul : "+judul+
 
-"\nKategori : "+kategori+
-
-"\n\n(Fitur preview premium akan dibuat pada tahap berikutnya.)"
+"\nKategori : "+kategori
 
 );
 
@@ -104,14 +102,14 @@ alert(
    SIMPAN
 =========================== */
 
-if(btnSimpan){
+if(simpanBtn){
 
-btnSimpan.onclick=function(){
+simpanBtn.onclick=function(){
 
-const judul =
+const judul=
 document.getElementById("judul").value.trim();
 
-if(judul===""){
+if(judul==""){
 
 alert("Masukkan judul poster.");
 
@@ -121,9 +119,9 @@ return;
 
 alert(
 
-"🚀 Sistem Admin sudah aktif.\n\n"+
+"Poster siap disimpan.\n\n"+
 
-"Selanjutnya kita akan membuat tombol ini benar-benar mengirim data ke GitHub."
+"Tahap berikutnya kita akan membuat tombol ini benar-benar mengirim data ke GitHub."
 
 );
 
@@ -131,4 +129,4 @@ alert(
 
 }
 
-console.log("Admin Panel Aktif");
+console.log("APP ADMIN BERHASIL DIMUAT");
