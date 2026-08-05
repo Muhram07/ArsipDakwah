@@ -18,7 +18,6 @@
         button:hover{transform:scale(1.02);}
         #status{margin-top:18px;text-align:center;color:#ff5b5b;font-weight:bold;}
         .menu{display:flex;flex-direction:column;gap:15px;margin-top:20px;}
-        #posterList{color:#bdbdbd;margin-top:10px;font-size:14px;}
         @media(max-width:600px){.login-box{padding:22px;}.login-box h1{font-size:28px;}}
     </style>
 </head>
@@ -39,7 +38,7 @@
 <div id="dashboard" style="display:none;">
     <div class="login-box">
         <h1>📚 Dashboard Admin</h1>
-        <p>Selamat Datang, <b id="adminName">Admin</b></p>
+        <p>Selamat Datang, Admin</p>
         <div class="menu">
             <button id="btnTambah">🖼 Tambah Poster</button>
             <button id="btnArsip">📂 Semua Arsip</button>
@@ -50,34 +49,20 @@
     </div>
 </div>
 
-<!-- UPLOAD (FITUR LENGKAP) -->
+<!-- UPLOAD -->
 <div id="uploadPage" style="display:none;">
     <div class="login-box">
         <h1>🖼 Tambah Poster</h1>
-        <p>Lengkapi data poster</p>
-        
         <label><b>Poster (Boleh banyak gambar)</b></label>
         <input type="file" id="posterFile" accept="image/*" multiple>
         <div id="posterList"></div>
-        <br>
-
-        <label><b>PDF (Opsional)</b></label>
-        <input type="file" id="pdfFile" accept=".pdf">
-        <br>
-
         <input type="text" id="judul" placeholder="Judul Poster">
-        
         <select id="kategori">
             <option>Tauhid</option><option>Sunnah</option><option>Bid'ah</option>
             <option>Syirik</option><option>Khurafat</option><option>Aqidah</option>
             <option>Fikih</option><option>Hadits</option><option>Tafsir</option>
             <option>Akhlak</option><option>Muamalah</option><option>Tanya Jawab</option>
         </select>
-
-        <input type="text" id="tag" placeholder="Tag (pisahkan dengan koma)">
-        <textarea id="caption" placeholder="Caption Pendek"></textarea>
-        <textarea id="content" placeholder="Isi Caption Lengkap"></textarea>
-
         <button id="btnPreview">👁 Preview</button>
         <button id="btnSimpan">🚀 Simpan Poster</button>
         <button id="btnKembali">⬅ Kembali ke Dashboard</button>
@@ -85,9 +70,8 @@
 </div>
 
 <script>
-    const PIN = "123456"; // Konfigurasi PIN
+    const PIN = "123456";
 
-    // ELEMEN
     const loginPage = document.getElementById("loginPage");
     const dashboard = document.getElementById("dashboard");
     const pinInput = document.getElementById("pin");
@@ -98,7 +82,6 @@
     const posterFile = document.getElementById("posterFile");
     const posterList = document.getElementById("posterList");
     const simpanBtn = document.getElementById("btnSimpan");
-    const previewBtn = document.getElementById("btnPreview");
 
     // LOGIN
     loginBtn.onclick = function() {
@@ -131,7 +114,7 @@
     document.getElementById("btnStatistik").onclick = function() { alert("Halaman Statistik akan dibuat."); };
     document.getElementById("btnSetting").onclick = function() { alert("Halaman Pengaturan akan dibuat."); };
 
-    // DAFTAR GAMBAR
+    // LIST GAMBAR
     posterFile.onchange = function() {
         posterList.innerHTML = "";
         const files = this.files;
@@ -144,20 +127,17 @@
     };
 
     // PREVIEW
-    previewBtn.onclick = function() {
+    document.getElementById("btnPreview").onclick = function() {
         const judul = document.getElementById("judul").value;
         const kategori = document.getElementById("kategori").value;
         const total = posterFile.files.length;
         alert("========== PREVIEW ==========\n\nJudul : " + judul + "\nKategori : " + kategori + "\nJumlah Part : " + total + "\n\nSiap dipublikasikan.");
     };
 
-    // SIMPAN
+    // SIMPAN (Koneksi ke api.js)
     simpanBtn.onclick = async function() {
         const judul = document.getElementById("judul").value.trim();
         const kategori = document.getElementById("kategori").value;
-        const tags = document.getElementById("tag").value;
-        const caption = document.getElementById("caption").value;
-        const content = document.getElementById("content").value;
         const file = posterFile.files[0];
 
         if (!judul) return alert("Masukkan judul poster.");
@@ -170,15 +150,15 @@
         reader.onload = async function(e) {
             const base64String = e.target.result.split(',')[1];
             try {
-                const response = await fetch('/api/github.js', {
+                const response = await fetch('/api.js', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         title: judul,
                         category: kategori,
-                        tags: tags,
-                        caption: caption,
-                        content: content,
+                        tags: "",
+                        caption: "",
+                        content: "",
                         imageBase64: base64String,
                         filename: file.name
                     })
@@ -191,7 +171,7 @@
                     alert("❌ Gagal: " + result.message);
                 }
             } catch(error) {
-                alert("❌ Error sistem: " + error.message);
+                alert("❌ Error: " + error.message);
             } finally {
                 simpanBtn.disabled = false;
                 simpanBtn.textContent = "🚀 Simpan Poster";
@@ -200,5 +180,6 @@
         reader.readAsDataURL(file);
     };
 </script>
+
 </body>
 </html>
