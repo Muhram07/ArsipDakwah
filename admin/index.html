@@ -17,21 +17,17 @@ href="style.css">
 
 <body>
 
+<!-- ===========================
+LOGIN
+=========================== -->
+
 <div id="loginPage">
 
 <div class="login-box">
 
-<h1>
+<h1>📚 Admin Arsip Dakwah</h1>
 
-📚 Admin Arsip Dakwah
-
-</h1>
-
-<p>
-
-Masukkan PIN Admin
-
-</p>
+<p>Masukkan PIN Admin</p>
 
 <input
 type="password"
@@ -54,15 +50,24 @@ id="status">
 
 </div>
 
+<!-- ===========================
+DASHBOARD
+=========================== -->
+
 <div
 id="dashboard"
 style="display:none;">
 
-<h1>
+<div class="login-box">
 
-📚 Dashboard Admin
+<h1>📚 Dashboard Admin</h1>
 
-</h1>
+<p>
+
+Selamat Datang,
+<b id="adminName"></b>
+
+</p>
 
 <div class="menu">
 
@@ -72,22 +77,132 @@ style="display:none;">
 
 </button>
 
-<button disabled>
+<button id="btnArsip">
 
 📂 Semua Arsip
 
 </button>
 
-<button disabled>
+<button id="btnStatistik">
+
+📊 Statistik
+
+</button>
+
+<button id="btnSetting">
 
 ⚙ Pengaturan
 
 </button>
 
-<button
-id="logout">
+<button id="logout">
 
-Logout
+🚪 Logout
+
+</button>
+
+</div>
+
+</div>
+
+</div>
+
+<!-- ===========================
+UPLOAD POSTER
+=========================== -->
+
+<div
+id="uploadPage"
+style="display:none;">
+
+<div class="login-box">
+
+<h1>
+
+🖼 Tambah Poster
+
+</h1>
+
+<p>
+
+Lengkapi data poster
+
+</p>
+
+<input
+type="file"
+id="posterFile"
+accept="image/*">
+
+<input
+type="file"
+id="pdfFile"
+accept=".pdf">
+
+<input
+type="text"
+id="judul"
+placeholder="Judul Poster">
+
+<select id="kategori">
+
+<option>Tauhid</option>
+
+<option>Sunnah</option>
+
+<option>Bid'ah</option>
+
+<option>Syirik</option>
+
+<option>Khurafat</option>
+
+<option>Aqidah</option>
+
+<option>Fikih</option>
+
+<option>Hadits</option>
+
+<option>Tafsir</option>
+
+<option>Akhlak</option>
+
+<option>Muamalah</option>
+
+<option>Tanya Jawab</option>
+
+</select>
+
+<input
+type="text"
+id="tag"
+placeholder="Tag (pisahkan dengan koma)">
+
+<textarea
+id="caption"
+placeholder="Caption Pendek"></textarea>
+
+<textarea
+id="content"
+placeholder="Isi Caption Lengkap"></textarea>
+
+<button
+id="btnPreview">
+
+👁 Preview
+
+</button>
+
+<button
+id="btnSimpan">
+
+🚀 Simpan Poster
+
+</button>
+
+<button
+id="btnKembali">
+
+⬅ Kembali ke Dashboard
 
 </button>
 
