@@ -2,208 +2,80 @@
 <html lang="id">
 
 <head>
-
 <meta charset="UTF-8">
-
 <meta name="viewport" content="width=device-width,initial-scale=1">
-
 <title>Admin Arsip Dakwah</title>
-
 <link rel="stylesheet" href="/style.css">
-
 </head>
 
 <body>
 
-<!-- ===========================
-LOGIN
-=========================== -->
-
+<!-- =========================== LOGIN ============================ -->
 <div id="loginPage">
-
 <div class="login-box">
-
 <h1>📚 Admin Arsip Dakwah</h1>
-
 <p>Masukkan PIN Admin</p>
-
-<input
-type="password"
-id="pin"
-placeholder="PIN">
-
-<button id="loginBtn">
-
-Masuk
-
-</button>
-
+<input type="password" id="pin" placeholder="PIN">
+<button id="loginBtn">Masuk</button>
 <p id="status"></p>
-
+</div>
 </div>
 
-</div>
-
-<!-- ===========================
-DASHBOARD
-=========================== -->
-
+<!-- =========================== DASHBOARD ============================ -->
 <div id="dashboard" style="display:none;">
-
 <div class="login-box">
-
 <h1>📚 Dashboard Admin</h1>
-
-<p>
-
-Selamat Datang,
-<b id="adminName"></b>
-
-</p>
-
+<p>Selamat Datang, <b id="adminName"></b></p>
 <div class="menu">
-
-<button id="btnTambah">
-🖼 Tambah Poster
-</button>
-
-<button id="btnArsip">
-📂 Semua Arsip
-</button>
-
-<button id="btnStatistik">
-📊 Statistik
-</button>
-
-<button id="btnSetting">
-⚙ Pengaturan
-</button>
-
-<button id="logout">
-🚪 Logout
-</button>
-
+<button id="btnTambah">🖼 Tambah Poster</button>
+<button id="btnArsip">📂 Semua Arsip</button>
+<button id="btnStatistik">📊 Statistik</button>
+<button id="btnSetting">⚙ Pengaturan</button>
+<button id="logout">🚪 Logout</button>
+</div>
+</div>
 </div>
 
-</div>
-
-</div>
-
-<!-- ===========================
-UPLOAD POSTER
-=========================== -->
-
+<!-- =========================== UPLOAD POSTER ============================ -->
 <div id="uploadPage" style="display:none;">
-
 <div class="login-box">
-
 <h1>🖼 Tambah Poster</h1>
-
 <p>Lengkapi data poster</p>
 
 <label><b>Poster (Boleh banyak gambar)</b></label>
-
-<input
-type="file"
-id="posterFile"
-accept="image/*"
-multiple>
-
+<input type="file" id="posterFile" accept="image/*" multiple>
 <div id="posterList"></div>
-
 <br>
 
 <label><b>PDF (Opsional)</b></label>
-
-<input
-type="file"
-id="pdfFile"
-accept=".pdf">
-
+<input type="file" id="pdfFile" accept=".pdf">
 <br>
 
-<input
-type="text"
-id="judul"
-placeholder="Judul Poster">
-
+<input type="text" id="judul" placeholder="Judul Poster">
 <select id="kategori">
-
-<option>Tauhid</option>
-<option>Sunnah</option>
-<option>Bid'ah</option>
-<option>Syirik</option>
-<option>Khurafat</option>
-<option>Aqidah</option>
-<option>Fikih</option>
-<option>Hadits</option>
-<option>Tafsir</option>
-<option>Akhlak</option>
-<option>Muamalah</option>
-<option>Tanya Jawab</option>
-
+<option>Tauhid</option><option>Sunnah</option><option>Bid'ah</option>
+<option>Syirik</option><option>Khurafat</option><option>Aqidah</option>
+<option>Fikih</option><option>Hadits</option><option>Tafsir</option>
+<option>Akhlak</option><option>Muamalah</option><option>Tanya Jawab</option>
 </select>
 
-<input
-type="text"
-id="tag"
-placeholder="Tag (pisahkan dengan koma)">
+<input type="text" id="tag" placeholder="Tag (pisahkan dengan koma)">
+<textarea id="caption" placeholder="Caption Pendek"></textarea>
+<textarea id="content" placeholder="Isi Caption Lengkap"></textarea>
 
-<textarea
-id="caption"
-placeholder="Caption Pendek"></textarea>
-
-<textarea
-id="content"
-placeholder="Isi Caption Lengkap"></textarea>
-
-<button id="btnPreview">
-👁 Preview
-</button>
-
-<button id="btnSimpan">
-🚀 Simpan Poster
-</button>
-
-<button id="btnKembali">
-⬅ Kembali ke Dashboard
-</button>
-
-<br><br>
-
-<hr>
-
-<p
-style="
-text-align:center;
-font-size:12px;
-color:#777;
-line-height:22px;">
-
-Administrator<br>
-
-<b>Muhram Nur Surisma</b><br>
-
-Arsip Dakwah CMS v1.0
-
+<button id="btnPreview">👁 Preview</button>
+<button id="btnSimpan">🚀 Simpan Poster</button>
+<button id="btnKembali">⬅ Kembali ke Dashboard</button>
+<br><br><hr>
+<p style="text-align:center;font-size:12px;color:#777;line-height:22px;">
+Administrator<br><b>Muhram Nur Surisma</b><br>Arsip Dakwah CMS v1.0
 </p>
-
+</div>
 </div>
 
-</div>
-
-<!-- ===========================
-SCRIPT
-=========================== -->
-
-<script src="config.js"></script>
-
-<script src="github.js"></script>
-
-<script src="login.js"></script>
-
-<script src="app.js"></script>
-
+<script src="/config.js"></script>
+<script src="/github.js"></script>
+<script src="/login.js"></script>
+<script src="/app.js"></script>
 </body>
-
-  </html>
+</html>
