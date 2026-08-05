@@ -6,7 +6,7 @@ const BRANCH = "main";
 // ==========================================================
 // 🔴 LANGKAH PENTING: GANTI BAGIAN INI DENGAN TOKEN BARU ANDA
 // ==========================================================
-const GITHUB_TOKEN = "MASUKKAN_TOKEN_BARU_ANDA_DISINI"; 
+const GITHUB_TOKEN = "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"; 
 // ==========================================================
 
 import { Octokit } from "@octokit/rest";
@@ -63,4 +63,4 @@ export default async function handler(req, res) {
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-           }
+}
