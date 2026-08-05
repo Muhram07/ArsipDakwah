@@ -72,7 +72,7 @@
 <script>
     const PIN = "123456"; // Konfigurasi PIN di sini
 
-    // LOGIN & LOGOUT
+    // ELEMEN HTML
     const loginPage = document.getElementById("loginPage");
     const dashboard = document.getElementById("dashboard");
     const pinInput = document.getElementById("pin");
@@ -80,10 +80,12 @@
     const statusText = document.getElementById("status");
     const logoutBtn = document.getElementById("logout");
 
-    if(localStorage.getItem("adminLogin")=="true"){
-        loginPage.style.display="none"; dashboard.style.display="block";
-    }
+    // CEK LOGIN (HAPUS BAGIAN INI AGAR TIDAK AUTO LOGIN)
+    // if(localStorage.getItem("adminLogin")=="true"){
+    //     loginPage.style.display="none"; dashboard.style.display="block";
+    // }
 
+    // LOGIN
     loginBtn.onclick=function(){
         if(pinInput.value===PIN){
             localStorage.setItem("adminLogin","true");
@@ -93,11 +95,12 @@
         }
     };
 
+    // LOGOUT
     logoutBtn.onclick=function(){
         localStorage.removeItem("adminLogin"); location.reload();
     };
 
-    // NAVIGASI DASHBOARD
+    // NAVIGASI
     document.getElementById("btnTambah").onclick = function() {
         document.getElementById("dashboard").style.display = "none";
         document.getElementById("uploadPage").style.display = "block";
@@ -115,14 +118,44 @@
         alert("Preview: " + document.getElementById("judul").value + "\nTotal Part: " + document.getElementById("posterFile").files.length);
     };
 
-    // UPLOAD
+    // SIMPAN (Sudah disambungkan ke API Vercel Anda)
     document.getElementById("btnSimpan").onclick = async function() {
         const judul = document.getElementById("judul").value.trim();
         const file = document.getElementById("posterFile").files[0];
+        
         if (!judul) return alert("Masukkan judul.");
         if (!file) return alert("Pilih gambar.");
-        alert("✅ Berhasil disimpan (Simulasi)! Data: " + judul);
-        // Saat Anda sudah setting backend Vercel, ganti alert ini dengan fetch ke /api/github.js
+
+        // KONVERSI GAMBAR KE BASE64 & KIRIM KE API
+        const reader = new FileReader();
+        reader.onload = async function(e) {
+            const base64String = e.target.result.split(',')[1];
+            try {
+                const response = await fetch('/api/github.js', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        title: judul,
+                        category: document.getElementById("kategori").value,
+                        tags: "",
+                        caption: "",
+                        content: "",
+                        imageBase64: base64String,
+                        filename: file.name
+                    })
+                });
+                const result = await response.json();
+                if(result.success) {
+                    alert("✅ " + result.message);
+                    location.reload();
+                } else {
+                    alert("❌ Gagal: " + result.message);
+                }
+            } catch(error) {
+                alert("❌ Error: " + error.message);
+            }
+        };
+        reader.readAsDataURL(file);
     };
 </script>
 
