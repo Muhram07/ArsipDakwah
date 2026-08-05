@@ -18,6 +18,7 @@
         button:hover{transform:scale(1.02);}
         #status{margin-top:18px;text-align:center;color:#ff5b5b;font-weight:bold;}
         .menu{display:flex;flex-direction:column;gap:15px;margin-top:20px;}
+        #posterList{color:#bdbdbd;margin-top:10px;font-size:14px;}
         @media(max-width:600px){.login-box{padding:22px;}.login-box h1{font-size:28px;}}
     </style>
 </head>
@@ -49,20 +50,34 @@
     </div>
 </div>
 
-<!-- UPLOAD -->
+<!-- UPLOAD (FITUR LENGKAP) -->
 <div id="uploadPage" style="display:none;">
     <div class="login-box">
         <h1>🖼 Tambah Poster</h1>
+        <p>Lengkapi data poster</p>
+        
         <label><b>Poster (Boleh banyak gambar)</b></label>
         <input type="file" id="posterFile" accept="image/*" multiple>
         <div id="posterList"></div>
+        <br>
+
+        <label><b>PDF (Opsional)</b></label>
+        <input type="file" id="pdfFile" accept=".pdf">
+        <br>
+
         <input type="text" id="judul" placeholder="Judul Poster">
+        
         <select id="kategori">
             <option>Tauhid</option><option>Sunnah</option><option>Bid'ah</option>
             <option>Syirik</option><option>Khurafat</option><option>Aqidah</option>
             <option>Fikih</option><option>Hadits</option><option>Tafsir</option>
             <option>Akhlak</option><option>Muamalah</option><option>Tanya Jawab</option>
         </select>
+
+        <input type="text" id="tag" placeholder="Tag (pisahkan dengan koma)">
+        <textarea id="caption" placeholder="Caption Pendek"></textarea>
+        <textarea id="content" placeholder="Isi Caption Lengkap"></textarea>
+
         <button id="btnPreview">👁 Preview</button>
         <button id="btnSimpan">🚀 Simpan Poster</button>
         <button id="btnKembali">⬅ Kembali ke Dashboard</button>
@@ -70,9 +85,9 @@
 </div>
 
 <script>
-    const PIN = "123456"; // Konfigurasi PIN di sini
+    const PIN = "123456"; // Konfigurasi PIN
 
-    // ELEMEN HTML
+    // ELEMEN
     const loginPage = document.getElementById("loginPage");
     const dashboard = document.getElementById("dashboard");
     const pinInput = document.getElementById("pin");
@@ -80,24 +95,27 @@
     const statusText = document.getElementById("status");
     const logoutBtn = document.getElementById("logout");
 
-    // CEK LOGIN (HAPUS BAGIAN INI AGAR TIDAK AUTO LOGIN)
-    // if(localStorage.getItem("adminLogin")=="true"){
-    //     loginPage.style.display="none"; dashboard.style.display="block";
-    // }
+    const posterFile = document.getElementById("posterFile");
+    const posterList = document.getElementById("posterList");
+    const simpanBtn = document.getElementById("btnSimpan");
+    const previewBtn = document.getElementById("btnPreview");
 
     // LOGIN
-    loginBtn.onclick=function(){
-        if(pinInput.value===PIN){
-            localStorage.setItem("adminLogin","true");
-            loginPage.style.display="none"; dashboard.style.display="block";
+    loginBtn.onclick = function() {
+        if(pinInput.value === PIN){
+            localStorage.setItem("adminLogin", "true");
+            loginPage.style.display = "none";
+            dashboard.style.display = "block";
         } else {
-            statusText.innerHTML="❌ PIN Salah"; pinInput.value="";
+            statusText.innerHTML = "❌ PIN Salah";
+            pinInput.value = "";
         }
     };
 
     // LOGOUT
-    logoutBtn.onclick=function(){
-        localStorage.removeItem("adminLogin"); location.reload();
+    logoutBtn.onclick = function() {
+        localStorage.removeItem("adminLogin");
+        location.reload();
     };
 
     // NAVIGASI
@@ -113,20 +131,41 @@
     document.getElementById("btnStatistik").onclick = function() { alert("Halaman Statistik akan dibuat."); };
     document.getElementById("btnSetting").onclick = function() { alert("Halaman Pengaturan akan dibuat."); };
 
-    // PREVIEW
-    document.getElementById("btnPreview").onclick = function() {
-        alert("Preview: " + document.getElementById("judul").value + "\nTotal Part: " + document.getElementById("posterFile").files.length);
+    // DAFTAR GAMBAR
+    posterFile.onchange = function() {
+        posterList.innerHTML = "";
+        const files = this.files;
+        if(files.length === 0) return;
+        let html = "<br><b>" + files.length + " Part Dipilih</b><br><br>";
+        for(let i = 0; i < files.length; i++) {
+            html += "✅ Part " + (i + 1) + " : " + files[i].name + "<br>";
+        }
+        posterList.innerHTML = html;
     };
 
-    // SIMPAN (Sudah disambungkan ke API Vercel Anda)
-    document.getElementById("btnSimpan").onclick = async function() {
-        const judul = document.getElementById("judul").value.trim();
-        const file = document.getElementById("posterFile").files[0];
-        
-        if (!judul) return alert("Masukkan judul.");
-        if (!file) return alert("Pilih gambar.");
+    // PREVIEW
+    previewBtn.onclick = function() {
+        const judul = document.getElementById("judul").value;
+        const kategori = document.getElementById("kategori").value;
+        const total = posterFile.files.length;
+        alert("========== PREVIEW ==========\n\nJudul : " + judul + "\nKategori : " + kategori + "\nJumlah Part : " + total + "\n\nSiap dipublikasikan.");
+    };
 
-        // KONVERSI GAMBAR KE BASE64 & KIRIM KE API
+    // SIMPAN
+    simpanBtn.onclick = async function() {
+        const judul = document.getElementById("judul").value.trim();
+        const kategori = document.getElementById("kategori").value;
+        const tags = document.getElementById("tag").value;
+        const caption = document.getElementById("caption").value;
+        const content = document.getElementById("content").value;
+        const file = posterFile.files[0];
+
+        if (!judul) return alert("Masukkan judul poster.");
+        if (!file) return alert("Pilih minimal satu gambar.");
+
+        simpanBtn.disabled = true;
+        simpanBtn.textContent = "⏳ Mengupload...";
+
         const reader = new FileReader();
         reader.onload = async function(e) {
             const base64String = e.target.result.split(',')[1];
@@ -136,10 +175,10 @@
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({
                         title: judul,
-                        category: document.getElementById("kategori").value,
-                        tags: "",
-                        caption: "",
-                        content: "",
+                        category: kategori,
+                        tags: tags,
+                        caption: caption,
+                        content: content,
                         imageBase64: base64String,
                         filename: file.name
                     })
@@ -152,12 +191,14 @@
                     alert("❌ Gagal: " + result.message);
                 }
             } catch(error) {
-                alert("❌ Error: " + error.message);
+                alert("❌ Error sistem: " + error.message);
+            } finally {
+                simpanBtn.disabled = false;
+                simpanBtn.textContent = "🚀 Simpan Poster";
             }
         };
         reader.readAsDataURL(file);
     };
 </script>
-
 </body>
 </html>
