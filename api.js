@@ -1,51 +1,88 @@
+// Deno Deploy API - Final Version
 import { Octokit } from "https://esm.sh/octokit";
 
-export default async function handler(req, res) {
-  // Mengizinkan akses dari browser (CORS) agar bisa diakses lewat link URL
-  res.setHeader('Access-Control-Allow-Origin', '*');
-  res.setHeader('Access-Control-Allow-Methods', 'GET, POST, OPTIONS');
-  if (req.method === 'OPTIONS') {
-    return res.status(200).end();
+// Fungsi untuk mengatur CORS (mengizinkan akses dari browser)
+const corsHeaders = {
+  "Access-Control-Allow-Origin": "*",
+  "Access-Control-Allow-Methods": "GET, POST, OPTIONS",
+  "Access-Control-Allow-Headers": "Content-Type",
+};
+
+Deno.serve(async (req) => {
+  // Tangani permintaan OPTIONS (preflight request dari browser)
+  if (req.method === "OPTIONS") {
+    return new Response(null, { status: 204, headers: corsHeaders });
   }
 
+  // Hanya izinkan POST
   if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method Not Allowed" });
+    return new Response(JSON.stringify({ error: "Method Not Allowed" }), {
+      status: 405,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   }
 
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const url = new URL(`https://${req.headers.host}`);
-  const pathParts = url.pathname.split('/');
-  const GITHUB_OWNER = pathParts[1];
+  const GITHUB_TOKEN = Deno.env.get("GITHUB_TOKEN");
+  const GITHUB_OWNER = "Muhram07";
   const GITHUB_REPO = "ArsipDakwah";
 
   if (!GITHUB_TOKEN) {
-    return res.status(500).json({ success: false, message: "GITHUB_TOKEN belum diset!" });
+    return new Response(JSON.stringify({ success: false, message: "Token GitHub belum diset!" }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   }
 
   try {
-    const { imageBase64, filename } = req.body;
-    
-    if (!imageBase64 || !filename) {
-      return res.status(400).json({ success: false, message: "Gambar atau nama file tidak ditemukan" });
+    const body = await req.json();
+    const { title, category, tags, caption, content, imageBase64, filename } = body;
+
+    if (!title || !imageBase64 || !filename) {
+      return new Response(JSON.stringify({ success: false, message: "Data tidak lengkap" }), {
+        status: 400,
+        headers: { "Content-Type": "application/json", ...corsHeaders },
+      });
     }
 
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
     
-    // Upload gambar saja (TANPA JSON)
+    // Upload gambar
     await octokit.rest.repos.createOrUpdateFileContents({
       owner: GITHUB_OWNER, repo: GITHUB_REPO, path: `assets/img/${filename}`,
-      message: `Tes upload: ${filename}`, content: imageBase64, branch: "main",
+      message: `Upload poster: ${title}`, content: imageBase64, branch: "main",
     });
 
-    return res.status(200).json({ 
-      success: true, 
-      message: `✅ Gambar ${filename} berhasil diupload!`,
-      url: `https://raw.githubusercontent.com/${GITHUB_OWNER}/${GITHUB_REPO}/main/assets/img/${filename}`
+    // Ambil & update JSON
+    const current = await octokit.rest.repos.getContent({
+      owner: GITHUB_OWNER, repo: GITHUB_REPO, path: "data/posters.json", branch: "main",
+    });
+    const sha = current.data.sha;
+    const oldContent = new TextDecoder().decode(Uint8Array.from(atob(current.data.content), c => c.charCodeAt(0)));
+    let posters = JSON.parse(oldContent);
+
+    posters.push({
+      id: `${category.toLowerCase().replace(/ /g, '-')}-${Date.now()}`,
+      title, category, tags: tags.split(',').map(t => t.trim()),
+      image: `/assets/img/${filename}`, caption, content,
+      date: new Date().toISOString().split('T')[0]
+    });
+
+    // Simpan JSON
+    await octokit.rest.repos.createOrUpdateFileContents({
+      owner: GITHUB_OWNER, repo: GITHUB_REPO, path: "data/posters.json",
+      message: `Tambah poster: ${title}`,
+      content: btoa(JSON.stringify(posters, null, 2)),
+      sha: sha, branch: "main",
+    });
+
+    return new Response(JSON.stringify({ success: true, message: "✅ Poster berhasil dipublikasikan!" }), {
+      headers: { "Content-Type": "application/json", ...corsHeaders },
     });
 
   } catch (error) {
-    return res.status(500).json({ success: false, message: error.message });
+    return new Response(JSON.stringify({ success: false, message: error.message }), {
+      status: 500,
+      headers: { "Content-Type": "application/json", ...corsHeaders },
+    });
   }
-}
-
-
+});
