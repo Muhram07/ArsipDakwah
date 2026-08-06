@@ -14,38 +14,49 @@ export default async function handler(req, res) {
   }
 
   try {
-    const { title, category, tags, caption, content, imageBase64, filename } = req.body;
+    const { title, category, tags, caption, content, imageBase64, filename, pdfBase64, pdfName } = req.body;
     const octokit = new Octokit({ auth: GITHUB_TOKEN });
-    const imagePath = `assets/img/${filename}`;
-
+    
+    // 1. Simpan Gambar ke FOLDER TES: test-output/img/
+    const imagePath = `test-output/img/${filename}`;
     await octokit.rest.repos.createOrUpdateFileContents({
       owner: GITHUB_OWNER, repo: GITHUB_REPO, path: imagePath,
-      message: `Upload poster: ${title}`, content: imageBase64, branch: "main",
+      message: `[TES] Upload gambar: ${title}`, content: imageBase64, branch: "main",
     });
 
-    const current = await octokit.rest.repos.getContent({
-      owner: GITHUB_OWNER, repo: GITHUB_REPO, path: "data/posters.json", branch: "main",
-    });
-    const sha = current.data.sha;
-    const oldContent = Buffer.from(current.data.content, 'base64').toString('utf-8');
-    let posters = JSON.parse(oldContent);
+    // 2. Jika ada PDF, simpan ke FOLDER TES: test-output/pdf/
+    let pdfPath = null;
+    if (pdfBase64 && pdfName) {
+      pdfPath = `test-output/pdf/${pdfName}`;
+      await octokit.rest.repos.createOrUpdateFileContents({
+        owner: GITHUB_OWNER, repo: GITHUB_REPO, path: pdfPath,
+        message: `[TES] Upload PDF: ${pdfName}`, content: pdfBase64, branch: "main",
+      });
+    }
 
-    posters.push({
-      id: `${category.toLowerCase().replace(/ /g, '-')}-${Date.now()}`,
+    // 3. Simpan JSON ke FOLDER TES: test-output/posters.json
+    const testData = [{
+      id: `test-${Date.now()}`,
       title, category, tags: tags.split(',').map(t => t.trim()),
-      image: `/${imagePath}`, caption, content,
+      image: `/${imagePath}`,
+      pdf: pdfPath ? `/${pdfPath}` : null,
+      caption, content,
       date: new Date().toISOString().split('T')[0]
-    });
+    }];
 
+    // Tulis file JSON baru di folder tes (TIDAK akan menimpa data asli)
     await octokit.rest.repos.createOrUpdateFileContents({
-      owner: GITHUB_OWNER, repo: GITHUB_REPO, path: "data/posters.json",
-      message: `Tambah poster: ${title}`,
-      content: Buffer.from(JSON.stringify(posters, null, 2)).toString('base64'),
-      sha: sha, branch: "main",
+      owner: GITHUB_OWNER, repo: GITHUB_REPO, path: "test-output/posters.json",
+      message: `[TES] Membuat file JSON output`,
+      content: Buffer.from(JSON.stringify(testData, null, 2)).toString('base64'),
+      branch: "main",
     });
 
-    return res.status(200).json({ success: true, message: "✅ Poster berhasil dipublikasikan!" });
+    return res.status(200).json({ 
+      success: true, 
+      message: "✅ [TES BERHASIL] Output tersimpan di folder 'test-output'! Silakan cek GitHub Anda." 
+    });
   } catch (error) {
     return res.status(500).json({ success: false, message: error.message });
   }
-}
+      }
